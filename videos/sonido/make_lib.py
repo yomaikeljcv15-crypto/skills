@@ -132,4 +132,7 @@ save('breath.wav', x)
 # lluvia (8 s en bucle)
 n = int(8 * SR); r = rng.standard_normal(n); r = r - lp_fast(r, 3); drops = rng.standard_normal(n) * (rng.random(n) > .996) * 2
 save('rain.wav', lp_fast(r, 2) * .5 + drops)
+
+# pitido continuo de monitor en línea plana (4 s en bucle)
+t = t_(4); save('flat.wav', np.sin(2 * np.pi * 980 * t) * (.9 + .1 * np.sin(2 * np.pi * .5 * t)))
 print('biblioteca lista')

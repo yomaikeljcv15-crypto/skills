@@ -61,6 +61,19 @@ elif V == '5':
     hits += [['sub_boom.wav', st(11) + .1, .8], ['keys.wav', st(11) + .6, .6]]; twist(W(11, 'adelantó'), .7, .4)
     for w in ('marina', 'ernesto', 'reflejo', 'tomás'): hits.append(['whoosh.wav', W(12, w) - .25, .5])
     twist(W(12, 'nadie'), 1.0, .5)
+elif V == '6':
+    bpm = [0, 110, 160, 170, 40, 0, 0, 0, 0, 0, 45, 72, 80, 80]
+    beds += [['flat.wav', st(0), SC[0]['end'], .12]] + [['flat.wav', st(5), SC[9]['end'], .12]]
+    beds += [['rain.wav', st(2), SC[4]['end'], .5], ['breath.wav', st(3), SC[3]['end'], .5], ['engine.wav', st(8), SC[8]['end'], .6], ['engine.wav', st(9), SC[9]['end'], .25]]
+    hits += [['creak.wav', st(2) + 1.3, .7], ['stinger_short.mp3', st(2) + 1.4, .8], ['rumble.wav', st(2) + 1.4, .5]]
+    hits += [['sub_boom.wav', W(4, 'moverse'), .6], ['sub_boom.wav', st(5) + .2, .5]]
+    x = st(6) + .3
+    while x < SC[6]['end'] - .4: hits += [['knock.mp3', x, .5], ['paper.wav', x + .1, .4]]; x += .6
+    twist(W(10, 'pico'), .6, .5); hits += [['beep.wav', W(10, 'pico'), 1.0], ['beep.wav', W(10, 'otro'), 1.0]]
+    for sc in (11, 12):
+        x = st(sc) + .3
+        while x < SC[sc]['end'] - .2: hits.append(['beep.wav', x, .35]); x += 60 / bpm[sc]
+    hits += [['sub_boom.wav', st(13) + .1, .4]]
 else:
     bpm = [90, 104, 108, 115, 112, 120, 118, 138, 106, 104, 96, 150, 167, 140]
     beds += [['engine.wav', st(0), SC[0]['end'], .55], ['engine.wav', st(8), SC[8]['end'], .55], ['engine.wav', W(9, 'luces'), SC[9]['end'], .55]]
