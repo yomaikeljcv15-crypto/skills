@@ -128,4 +128,8 @@ for k in range(4):
     e = np.sin(np.linspace(0, np.pi, n)) ** 2 * (.7 if k % 2 else 1)
     i = int(k * .6 * SR); x[i:i + n] += b * e
 save('breath.wav', x)
+
+# lluvia (8 s en bucle)
+n = int(8 * SR); r = rng.standard_normal(n); r = r - lp_fast(r, 3); drops = rng.standard_normal(n) * (rng.random(n) > .996) * 2
+save('rain.wav', lp_fast(r, 2) * .5 + drops)
 print('biblioteca lista')

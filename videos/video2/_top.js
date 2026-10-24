@@ -121,7 +121,8 @@ function ruleCard(n, big, small, lt, red) {
   rr(70, 300, 940, 470, 18, 'rgba(11,13,20,.92)', col, 5);
   txt('REGLA ' + n, 540, 370, MONO(34), col);
   X.fillStyle = col; X.fillRect(470, 400, 140, 4);
-  X.font = F(900, 66); const long = X.measureText(big).width > 1600;
+  const nLines = (s, font, maxW) => { X.font = font; let n = 1, cur = ''; for (const w of s.split(' ')) { const tt = cur ? cur + ' ' + w : w; if (X.measureText(tt).width > maxW && cur) { n++; cur = w; } else cur = tt; } return n; };
+  const long = nLines(big, F(900, 66), 860) > 2;
   wrap(big, 540, long ? 495 : 480, 860, F(900, long ? 52 : 66), C.white, long ? 62 : 78);
   if (small) wrap(small, 540, 690, 860, F(700, 40), red ? '#F2A0A0' : '#D9C27A', 50);
   X.restore();
