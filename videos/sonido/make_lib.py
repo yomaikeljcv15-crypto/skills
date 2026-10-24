@@ -112,4 +112,20 @@ save('erase.wav', (nz * .6 + tone * .5) * chop * np.linspace(1, 0, n) ** 1.5)
 
 # puerta de auto
 n = int(.6 * SR); save('car_door.wav', pitch_drop(.6, 160, 70, 20) * env(n, .002, .09) + lp_fast(rng.standard_normal(n), 5) * env(n, .001, .03) * 1.5)
+
+# pitido de baliza
+n = int(.12 * SR); save('beep.wav', np.sin(2 * np.pi * 2200 * t_(.12)) * np.minimum(1, np.minimum(np.arange(n), n - np.arange(n)) / (.004 * SR)))
+
+# estruendo de avalancha (6 s)
+t = t_(6); n = len(t); nz = lp_fast(rng.standard_normal(n), 120) * 8
+rum = (nz + np.sin(2 * np.pi * 30 * t) * .4) * np.sin(np.linspace(0, np.pi, n)) ** .7
+save('rumble.wav', rum)
+
+# respiración agitada (2,4 s en bucle: inhala y exhala)
+x = np.zeros(int(2.4 * SR))
+for k in range(4):
+    n = int(.42 * SR); b = rng.standard_normal(n); b = lp_fast(b, 3) - lp_fast(b, 30)
+    e = np.sin(np.linspace(0, np.pi, n)) ** 2 * (.7 if k % 2 else 1)
+    i = int(k * .6 * SR); x[i:i + n] += b * e
+save('breath.wav', x)
 print('biblioteca lista')

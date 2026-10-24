@@ -43,8 +43,8 @@ S[0] = (lt, d) => {
   skyMountain(lt);
   const k = ease((lt - 1.2) / 2.2);
   [[300, 760, '#C94444'], [470, 800, '#3B82C4'], [640, 770, '#4CC38A'], [520, 960, C.yellow]].forEach(([x, y, c], j) => person({...JACKET, shirt: c, sleeve: c, x, y, h: j === 3 ? 160 : 110, look: -1, eyeScale: lt > 1 ? 1.3 : 1, mouth: lt > 1 ? 'o' : 'line'}));
-  if (k > 0) { X.fillStyle = SNOW; X.beginPath(); X.moveTo(-50, 0); X.lineTo(1130, 0); X.lineTo(1130, lerp(100, 900, k)); for (let x = 1130; x >= -50; x -= 70) X.lineTo(x, lerp(100, 900, k) + Math.sin(x * .03 + lt * 8) * 40); X.fill();
-    for (let i = 0; i < 40; i++) circ(rnd(i) * W, lerp(100, 900, k) + rnd(i + 2) * 60 - 30, 20 + rnd(i) * 40, 'rgba(255,255,255,.85)'); }
+  if (k > 0) { X.fillStyle = 'rgba(232,241,248,.93)'; X.beginPath(); X.moveTo(-50, 380); X.lineTo(1130, 380); X.lineTo(1130, lerp(420, 1000, k)); for (let x = 1130; x >= -50; x -= 70) X.lineTo(x, lerp(420, 1000, k) + Math.sin(x * .03 + lt * 8) * 40); X.fill();
+    for (let i = 0; i < 40; i++) circ(rnd(i) * W, lerp(420, 1000, k) + rnd(i + 2) * 60 - 30, 20 + rnd(i) * 40, 'rgba(255,255,255,.85)'); }
   if (lt > 3.4 && lt < 3.7) { X.fillStyle = '#FFF'; X.fillRect(0, 0, W, IL_H); }
   if (lt > 3.7) { X.fillStyle = SNOW; X.fillRect(0, 0, W, IL_H); X.fillStyle = SNOW2; for (let i = 0; i < 6; i++) ell(rnd(i) * W, 300 + rnd(i + 1) * 700, 160, 40, SNOW2);
     person({...JACKET, x: 540, y: 1000, h: 380, look: 0, eyeScale: 1.3, mouth: 'o', blink: blinkAt(lt, 1)}); }
@@ -78,7 +78,7 @@ S[4] = (lt, d) => {
   X.fillStyle = SNOW; X.fillRect(0, 0, W, IL_H);
   X.save(); X.translate(540, 1300); X.scale(2.4, 2.4); person({...JACKET, x: 0, y: 0, h: 500, look: 0, eyeScale: 1.1, mouth: 'o', blink: blinkAt(lt, .5)}); X.restore();
   // vaho demasiado cerca de la cara
-  for (let i = 0; i < 4; i++) { const k = ((lt * .8 + i * .25) % 1); circ(540 + Math.sin(i * 3) * 60, 600 - k * 160, 60 + k * 90, `rgba(255,255,255,${(1 - k) * .7})`); }
+  for (let i = 0; i < 4; i++) { const k = ((lt * .8 + i * .25) % 1); circ(560 + Math.sin(i * 3) * 50 + k * 60, 250 - k * 150, 40 + k * 80, `rgba(255,255,255,${(1 - k) * .7})`); }
   beacon(870, 300, .55, 9, {beep: lt * 1.6 % 1});
   tag('+2 MIN · TU RESPIRACIÓN', 40, 40); hudBeacon(4, lt, d);
 };
@@ -130,7 +130,7 @@ S[10] = (lt, d) => {
   underSnow(lt, {figures: true});
   const z = 1 + ease(lt / d) * .15; X.save(); X.translate(540, 700); X.scale(z, z); X.translate(-540, -700);
   X.save(); X.translate(560, 760); X.rotate(1.35); person({...JACKET, x: 0, y: 0, h: 330, arms: [2.2, -1.8], eyeScale: 1.2, mouth: 'o', look: 0}); X.restore();
-  ell(420, 690, 70, 50, 'rgba(20,35,60,.35)');
+  ell(905, 640, 70, 50, 'rgba(20,35,60,.35)');
   X.restore();
   txt('TÚ', 700, 560, F(900, 60), C.red); X.strokeStyle = C.red; X.lineWidth = 6; X.beginPath(); X.moveTo(690, 590); X.lineTo(610, 680); X.stroke();
   tag('BAJO 1 METRO DE NIEVE', 40, 40, C.red); hudBeacon(10, lt, d);
@@ -139,7 +139,7 @@ S[10] = (lt, d) => {
 S[11] = (lt, d) => {
   underSnow(lt); X.fillStyle = 'rgba(30,60,110,.35)'; X.fillRect(0, 0, W, IL_H);
   X.save(); X.translate(560, 760); X.rotate(1.35); person({...JACKET, x: 0, y: 0, h: 330, arms: [2.2, -1.8], blink: true, mouth: 'line'}); X.restore();
-  ell(420, 690, 70 * (1 - clamp(lt / d) * .6), 50 * (1 - clamp(lt / d) * .6), 'rgba(20,35,60,.4)');
+  ell(905, 640, 70 * (1 - clamp(lt / d) * .6), 50 * (1 - clamp(lt / d) * .6), 'rgba(20,35,60,.4)');
   const on = Math.floor(lt * 2) % 2 === 0; if (on) { rr(300, 230, 480, 170, 20, 'rgba(11,13,20,.9)', C.red, 5); txt('3:00', 540, 318, F(900, 110), C.red); }
   tag('+12 MIN · TU AIRE', 40, 40, C.ice); hudBeacon(11, lt, d);
 };
@@ -147,9 +147,9 @@ S[11] = (lt, d) => {
 S[12] = (lt, d) => {
   underSnow(lt, {figures: true});
   const pt = wordTime(12, 'toca'), k = ease((lt - pt + .8) / .8);
-  X.strokeStyle = '#555'; X.lineWidth = 12; X.beginPath(); X.moveTo(470, 110); X.lineTo(470, lerp(110, 690, k)); X.stroke();
+  X.strokeStyle = '#555'; X.lineWidth = 12; X.beginPath(); X.moveTo(790, 110); X.lineTo(790, lerp(110, 670, k)); X.stroke();
   X.save(); X.translate(560, 760); X.rotate(1.35); person({...JACKET, x: 0, y: 0, h: 330, arms: [2.2, -1.8], blink: lt < pt, eyeScale: 1.1, mouth: lt > pt ? 'o' : 'line'}); X.restore();
-  const vt = wordTime(12, 'marca'); if (lt > vt) { const kk = ease((lt - vt) / .6); X.fillStyle = `rgba(255,250,220,${kk * .8})`; X.beginPath(); X.moveTo(420, 120); X.lineTo(520, 120); X.lineTo(620, 690); X.lineTo(330, 690); X.fill();
+  const vt = wordTime(12, 'marca'); if (lt > vt) { const kk = ease((lt - vt) / .6); X.fillStyle = `rgba(255,250,220,${kk * .8})`; X.beginPath(); X.moveTo(740, 120); X.lineTo(840, 120); X.lineTo(960, 690); X.lineTo(640, 690); X.fill();
     X.save(); X.globalAlpha = kk; rr(560, 160, 460, 110, 55, 'rgba(245,245,245,.96)'); txt('¡Está aquí!', 790, 216, F(900, 46), '#111'); X.restore(); }
   tag('ARRIBA · RESCATE', 40, 40, C.green); hudBeacon(12, lt, d);
 };
@@ -179,4 +179,4 @@ const META = [
 ];
 const KEY_Y = ['avalancha', 'quince', 'minutos', 'baliza', 'flecha', 'nueve', 'sonda', 'espiral', 'dos', 'respiraciones', 'aire'];
 const KEY_R = ['enterrado', 'techo', 'emitir', 'tuya', 'frío', 'rápido', 'nadie'];
-const END_LINES = ['Si vas a la montaña, aprende a usar tu baliza.', 'La señal que importa puede ser la tuya.'];
+const END_LINES = ['Aprende a usar tu baliza.', 'La señal puede ser la tuya.'];

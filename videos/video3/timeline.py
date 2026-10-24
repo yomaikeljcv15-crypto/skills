@@ -9,9 +9,9 @@ words = [w for w in json.load(open(f'{A}/words.json'))['words'] if not w['text']
 sil = [tuple(map(float, l.split())) for l in open(f'{A}/sil.txt')]
 
 # Primera palabra de cada escena (13 escenas habladas)
-starts = ['En', 'Primera', 'En', 'Le', 'Regla', 'Regla', 'Segunda', 'Tercera', 'Respiras.', 'Cuarta', 'Llegas.', 'Abres', 'La']
+starts = ['Una', 'Bajo', 'Tu', 'Regla', 'Nueve', 'Regla', 'Dos', 'Regla', 'Una,', 'Miras', 'La', 'El', 'Entonces,']
 # Pausa añadida ANTES de cada escena (s)
-gap_before = [0.35, 0.5, 0.5, 0.5, 0.4, 0.4, 0.5, 0.5, 0.9, 0.5, 0.6, 0.6, 1.4]
+gap_before = [0.35, 0.5, 0.5, 0.5, 0.5, 0.4, 0.5, 0.5, 0.5, 0.6, 0.8, 0.8, 1.2]
 TAIL = 5.0  # escena final sin voz
 
 idx, k = [], 0

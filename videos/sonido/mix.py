@@ -7,7 +7,7 @@ import json, os, subprocess, sys, wave
 import numpy as np
 
 LIB = os.path.dirname(os.path.abspath(__file__))
-B, EV, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
+B, EV, OUT = os.path.abspath(sys.argv[1]), sys.argv[2], sys.argv[3]
 SR = 48000
 T = json.load(open(os.path.join(B, 'timing.json')))
 ev = json.load(open(EV))
