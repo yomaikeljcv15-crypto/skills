@@ -146,7 +146,7 @@ S[11] = (lt, d) => {
 // 13 · LO QUE PESCÓ
 S[12] = (lt, d) => {
   const g = X.createLinearGradient(0, 0, 0, IL_H); g.addColorStop(0, '#1A2A3A'); g.addColorStop(.25, SEA2); g.addColorStop(1, SEA1); X.fillStyle = g; X.fillRect(0, 0, W, IL_H);
-  X.fillStyle = '#0D1820'; X.fillRect(0, 0, W, 170);
+  const sk = X.createLinearGradient(0, 0, 0, 170); sk.addColorStop(0, '#1B2C44'); sk.addColorStop(1, '#4F7194'); X.fillStyle = sk; X.fillRect(0, 0, W, 170); circ(900, 50, 30, '#F2F2F2');
   X.strokeStyle = 'rgba(200,220,255,.5)'; X.lineWidth = 3; X.beginPath(); for (let x = 0; x <= W; x += 20) X.lineTo(x, 170 + Math.sin(x * .02 + lt * 2) * 6); X.stroke();
   const rise = ease(lt / d); const sy = lerp(1000, 520, rise);
   X.strokeStyle = '#AAB'; X.lineWidth = 4; X.beginPath(); X.moveTo(540, sy - 40); X.lineTo(540, 160); X.stroke();

@@ -46,7 +46,7 @@ function person(p) {
   // cuello y cabeza
   rr(-5 * u, -82 * u, 10 * u, 8 * u, 2 * u, p.skin2 || C.skin2);
   const hy = -97 * u, hr = 16 * u;
-  if (p.hairStyle === 'long') { rr(-19 * u, hy - 4 * u, 38 * u, 34 * u, 12 * u, p.hair); }
+  if (p.hairStyle === 'long') { rr(-20 * u, hy - 6 * u, 10 * u, 34 * u, 5 * u, p.hair); rr(10 * u, hy - 6 * u, 10 * u, 34 * u, 5 * u, p.hair); }
   circ(0, hy, hr, p.skin || C.skin);
   if (p.hair && p.hairStyle !== 'bald') {
     X.save(); X.beginPath(); X.arc(0, hy, hr + 1.5 * u, Math.PI * 1.02, Math.PI * 1.98); X.closePath(); X.fillStyle = p.hair; X.fill(); X.restore();
@@ -121,7 +121,8 @@ function ruleCard(n, big, small, lt, red) {
   rr(70, 300, 940, 470, 18, 'rgba(11,13,20,.92)', col, 5);
   txt('REGLA ' + n, 540, 370, MONO(34), col);
   X.fillStyle = col; X.fillRect(470, 400, 140, 4);
-  wrap(big, 540, 480, 860, F(900, 66), C.white, 78);
+  X.font = F(900, 66); const long = X.measureText(big).width > 1600;
+  wrap(big, 540, long ? 495 : 480, 860, F(900, long ? 52 : 66), C.white, long ? 62 : 78);
   if (small) wrap(small, 540, 690, 860, F(700, 40), red ? '#F2A0A0' : '#D9C27A', 50);
   X.restore();
 }

@@ -34,6 +34,21 @@ elif V == '3':
     while x < SC[6]['end'] - .3: hits.append(['paper.wav', x, .45]); x += .45
     twist(W(9, 'emitir'), .9, .5); hits += [['sub_boom.wav', st(10) + .2, .8]]; twist(W(10, 'enterrado'), 1.0, .4)
     hits += [['knock.mp3', W(12, 'toca'), .6], ['whoosh.wav', W(12, 'marca') - .2, .6]]
+elif V == '4':
+    bpm = [98, 102, 110, 108, 118, 130, 128, 135, 142, 150, 148, 160, 167, 150]
+    beds += [['engine.wav', st(0), SC[6]['end'], .25]]
+    hits += [['creak.wav', st(0) + 1.5, .3], ['erase.wav', st(1) + .3, .4], ['beep.wav', st(2) + .2, .6], ['beep.wav', W(2, 'responde'), .5]]
+    hits += [['paper.wav', st(3) + .2, .5]]
+    x = st(5) + .1
+    while x < SC[5]['end'] - .3: hits += [['beep.wav', x, .6], ['beep.wav', x + .03, .5]]; x += 2.2
+    hits += [['sub_boom.wav', st(7) + .1, .7]]; twist(W(7, 'sube'), .7, .5)
+    hits += [['knock.mp3', W(8, 'golpea'), 1.3], ['knock.mp3', W(8, 'golpe'), 1.3], ['knock.mp3', W(8, 'golpe') + 2.0, 1.3]]
+    for sc in (9, 10, 11):
+        x = st(sc) + .3
+        while x < SC[sc]['end'] - .2: hits.append(['knock.mp3', x, .7]); x += 1.4
+    x = st(11) + .2
+    while x < SC[11]['end'] - .3: hits.append(['creak.wav', x, .35]); x += 1.6
+    twist(W(11, 'izando'), 1.0, .5); hits += [['sub_boom.wav', st(12) + .2, .8]]; twist(W(12, 'pescó'), 1.0, .5)
 else:
     bpm = [90, 104, 108, 115, 112, 120, 118, 138, 106, 104, 96, 150, 167, 140]
     beds += [['engine.wav', st(0), SC[0]['end'], .55], ['engine.wav', st(8), SC[8]['end'], .55], ['engine.wav', W(9, 'luces'), SC[9]['end'], .55]]
