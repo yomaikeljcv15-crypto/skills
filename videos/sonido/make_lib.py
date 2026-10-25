@@ -135,4 +135,11 @@ save('rain.wav', lp_fast(r, 2) * .5 + drops)
 
 # pitido continuo de monitor en línea plana (4 s en bucle)
 t = t_(4); save('flat.wav', np.sin(2 * np.pi * 980 * t) * (.9 + .1 * np.sin(2 * np.pi * .5 * t)))
+
+# trueno (5 s) y sirena (3 s en bucle)
+t = t_(5); n = len(t); th = lp_fast(rng.standard_normal(n), 40) * 6 * np.exp(-t * .9) + lp_fast(rng.standard_normal(n), 4) * np.exp(-t * 8) * 2
+save('thunder.wav', th)
+t = t_(3); f = 700 + 250 * np.sin(2 * np.pi * .66 * t); save('siren.wav', np.sin(2 * np.pi * np.cumsum(f) / SR) * .6)
+# zumbido eléctrico (3 s)
+t = t_(3); save('buzz.wav', (np.sign(np.sin(2 * np.pi * 120 * t)) * .3 + np.sin(2 * np.pi * 240 * t) * .3) * np.minimum(1, t / 1.5))
 print('biblioteca lista')

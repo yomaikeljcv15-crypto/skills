@@ -74,6 +74,16 @@ elif V == '6':
         x = st(sc) + .3
         while x < SC[sc]['end'] - .2: hits.append(['beep.wav', x, .35]); x += 60 / bpm[sc]
     hits += [['sub_boom.wav', st(13) + .1, .4]]
+elif V == '7':
+    bpm = [120, 95, 130, 160, 150, 145, 140, 138, 135, 130, 110, 96, 90, 90]
+    beds += [['rain.wav', 0, SC[12]['end'], .5], ['buzz.wav', st(2) + .5, SC[2]['end'], .6], ['siren.wav', st(12), SC[12]['end'], .35]]
+    hits += [['thunder.wav', st(0) + .05, 1.0], ['stinger.mp3', W(0, 'muertos'), .8], ['thunder.wav', st(1) + 2.5, .4]]
+    hits += [['thunder.wav', st(3), 1.3], ['sub_boom.wav', st(3), 1.0]]
+    hits += [['whoosh.wav', st(5) + 1.0, .5]]
+    x = st(8) + .3
+    while x < SC[8]['end'] - .4: hits.append(['breath.wav', x, .5]); x += 2.6
+    hits += [['beep.wav', W(8, 'emergencias'), .4], ['beep.wav', W(8, 'emergencias') + .3, .4]]
+    twist(W(10, 'sola'), .5, .3); hits += [['erase.wav', st(11) + .2, .4], ['thunder.wav', st(13) + .1, .6]]
 else:
     bpm = [90, 104, 108, 115, 112, 120, 118, 138, 106, 104, 96, 150, 167, 140]
     beds += [['engine.wav', st(0), SC[0]['end'], .55], ['engine.wav', st(8), SC[8]['end'], .55], ['engine.wav', W(9, 'luces'), SC[9]['end'], .55]]

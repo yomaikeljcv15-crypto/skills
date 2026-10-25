@@ -107,7 +107,7 @@ S[8] = (lt, d) => {
 // 10 · REGLA 3
 S[9] = (lt, d) => {
   stormField(lt); X.fillStyle = 'rgba(0,0,0,.45)'; X.fillRect(0, 0, W, IL_H);
-  rr(200, 860, 680, 46, 20, '#6EC6FF'); rr(200, 920, 680, 46, 20, '#6EC6FF');
+  X.save(); X.translate(300, 1010); X.rotate(Math.PI / 2); person({...CARO, pants: C.ice, shoes: '#4A8AB8', x: 0, y: 0, h: 330, blink: true}); X.restore();
   const rt = wordTime(9, 'regla'); if (lt > rt) ruleCard(3, 'LAS PIERNAS AZULES NO SON LO QUE PARECEN.', 'Es una parálisis pasajera del rayo.', lt - rt, false);
   else { txt('AZULES · FRÍAS · SIN PULSO', 540, 760, F(900, 44), C.ice); }
   tag('KERAUNOPARÁLISIS', 40, 40, C.ice); hudCaro(9);
@@ -124,7 +124,7 @@ S[11] = (lt, d) => {
   X.fillStyle = '#1A1E2C'; X.fillRect(0, 0, W, IL_H);
   rr(-40, 380, 1160, 360, 180, CARO.skin);
   const grow = clamp(lt / 2.5), fade = 1 - clamp((lt - (d - 2)) / 2) * .6;
-  X.save(); X.globalAlpha = fade; X.lineCap = 'round'; lichtenberg(60, 560, -.05, 230, 7, grow, 11); lichtenberg(60, 560, .25, 200, 6, grow, 23); X.restore();
+  X.save(); X.beginPath(); X.roundRect(-40, 380, 1160, 360, 180); X.clip(); X.globalAlpha = fade; X.lineCap = 'round'; lichtenberg(60, 560, -.05, 230, 7, grow, 11); lichtenberg(60, 560, .25, 200, 6, grow, 23); X.restore();
   txt('FIGURAS DE LICHTENBERG', 540, 860, MONO(30), C.red);
   tag('BRAZO DE CARO', 40, 40, C.red); hudCaro(11);
 };

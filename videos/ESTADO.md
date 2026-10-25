@@ -12,7 +12,7 @@
 | 4 | La estación que asciende | Terminado |
 | 5 | Habitación 4:44 | Terminado |
 | 6 | 13,7 grados (historia real) | Terminado |
-| 7 | Triaje al revés | Escenas escritas (`video7/_scenes.js`) y narración en `video7/narracion.txt`; falta la voz |
+| 7 | Triaje al revés | Terminado |
 | 8 | El hombre que cayó dentro de una tormenta | Pendiente: solo guion |
 | 9 | Ocho ceros | Pendiente: solo guion |
 | 10 | Cartas de último recurso | Pendiente: solo guion |
@@ -34,10 +34,10 @@ Es posible con el conector Composio, que ya está disponible en Claude:
 - **Requisito:** el dueño de las cuentas debe autorizar cada conexión con el enlace que genera `COMPOSIO_MANAGE_CONNECTIONS`. Claude debe confirmar con el dueño antes de publicar cada video.
 - **Archivo:** los MP4 pesan unos 150 MB. Instagram acepta hasta 100 MB en algunos casos, así que conviene exportar una versión comprimida (por ejemplo, `-crf 23`, unos 30 MB).
 
-## Bloqueo actual
+## Cuenta de ElevenLabs
 
-ElevenLabs desactivó el acceso gratuito de la cuenta conectada ("actividad inusual") y pide una suscripción de pago para seguir generando voz. Sin voz no se pueden terminar los videos 7 a 10.
+Ya es de pago (el acceso gratuito fue bloqueado por "actividad inusual").
 
 ## Siguiente paso
 
-Crear las cuentas con el nombre elegido, conectarlas mediante Composio y seguir con los videos 7 a 10.
+Conexiones Composio iniciadas: YouTube e Instagram (cuenta Profesional) con enlace de autorización; TikTok requiere que el dueño configure primero su propia app en el panel de Composio. Siguiente: confirmar las conexiones, publicar los videos y seguir con los videos 8 a 10.
