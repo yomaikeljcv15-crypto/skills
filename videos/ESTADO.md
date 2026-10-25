@@ -12,7 +12,7 @@
 | 4 | La estación que asciende | Terminado |
 | 5 | Habitación 4:44 | Terminado |
 | 6 | 13,7 grados (historia real) | Terminado |
-| 7 | Triaje al revés | Pendiente: solo guion |
+| 7 | Triaje al revés | Escenas escritas (`video7/_scenes.js`) y narración en `video7/narracion.txt`; falta la voz |
 | 8 | El hombre que cayó dentro de una tormenta | Pendiente: solo guion |
 | 9 | Ocho ceros | Pendiente: solo guion |
 | 10 | Cartas de último recurso | Pendiente: solo guion |
@@ -33,6 +33,10 @@ Es posible con el conector Composio, que ya está disponible en Claude:
 - **TikTok:** permite subir videos, pero mientras la app de Composio no esté auditada por TikTok, los videos quedan en **privado (solo yo)** y hay que hacerlos públicos a mano desde la app.
 - **Requisito:** el dueño de las cuentas debe autorizar cada conexión con el enlace que genera `COMPOSIO_MANAGE_CONNECTIONS`. Claude debe confirmar con el dueño antes de publicar cada video.
 - **Archivo:** los MP4 pesan unos 150 MB. Instagram acepta hasta 100 MB en algunos casos, así que conviene exportar una versión comprimida (por ejemplo, `-crf 23`, unos 30 MB).
+
+## Bloqueo actual
+
+ElevenLabs desactivó el acceso gratuito de la cuenta conectada ("actividad inusual") y pide una suscripción de pago para seguir generando voz. Sin voz no se pueden terminar los videos 7 a 10.
 
 ## Siguiente paso
 
