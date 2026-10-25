@@ -1,0 +1,4 @@
+*.mp4
+*/audio/*.wav
+*/snaps/
+sonido/*.wav
