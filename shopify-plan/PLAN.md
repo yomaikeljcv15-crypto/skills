@@ -27,7 +27,7 @@ Fecha clave: temporada BFCM de TikTok Shop desde el **11 de noviembre**; Black F
 ## Pasarelas de pago — verificar desde Venezuela
 | Opción | Funciona con dueño en Venezuela | Nota |
 |---|---|---|
-| PayPal | Probable | Ya configurado. Confirmar que la cuenta puede **recibir** pagos comerciales. Retiene fondos a vendedores nuevos. |
+| PayPal | **Sí (confirmado)** | Cuenta comercial que ya recibe pagos. Pasarela principal. Puede retener fondos a vendedores nuevos. |
 | Shopify Payments | No | Exige SSN/EIN y banco de EE. UU. (solo con una LLC en EE. UU.). |
 | Stripe | No | Venezuela no está soportada. |
 | 2Checkout / Verifone | Verificar | Pasarela de Shopify que acepta comerciantes de muchos países; tiene revisión de cuenta. |
