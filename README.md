@@ -55,4 +55,5 @@ This is your shortcut to great interfaces. A shortcut to stand out in a sea of s
 - **[prototype](./skills/prototype/SKILL.md)** — Build multiple different versions of a UI piece you describe and go through them using a switcher.
 - **[mobile-native](./skills/mobile-native/SKILL.md)** — Make your web app feel native on a phone: sticky hover states, tap highlight flashes, the 100vh bug, inputs that zoom the page, laggy taps, safe areas, and the rest of the small fixes that separate a website from an app.
 - **[break-ui](./skills/break-ui/SKILL.md)** — Try to break the UI you built with worst-case data: long names, unusual emails, one-letter names, huge counts, empty lists, long labels.
+- **[graphify](./skills/graphify/SKILL.md)** — Turn a folder of code, docs, or papers into a queryable knowledge graph with `/graphify`. Third-party skill by [safishamsi](https://github.com/safishamsi/graphify) (Apache-2.0 / MIT). Needs the CLI: `pip install graphifyy`.
 - **[ask-sonner](./skills/ask-sonner/SKILL.md)** — Your guide to working with [Sonner](https://sonner.emilkowal.ski), my toast library. Contains setup, styling, recipes, and fixes for the most common issues.
