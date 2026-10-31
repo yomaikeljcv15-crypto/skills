@@ -5,7 +5,7 @@ PRIMERA VEZ
 2. Nombre del proyecto (ej: mis-fichas), sube este .zip, Implementar.
 3. Abre el enlace .pages.dev en Chrome > menú (tres puntos) > "Instalar app".
 
-ACTUALIZAR (version 2: pasos de contacto y mensajes)
+ACTUALIZAR (version 3: pendientes en amarillo con hora)
 1. Antes de nada: abre la app > Copia de seguridad > "Copiar respaldo" y pegalo en tus notas.
 2. dash.cloudflare.com > Workers y Pages > tu proyecto (el mismo) > Implementaciones > "Crear implementacion" / "Cargar activos" > sube este .zip nuevo.
 3. Abre la app por el MISMO enlace y cierrala del todo y vuelve a abrirla una vez para que cargue la version nueva.
@@ -17,3 +17,7 @@ PRIMER USO DE LOS MENSAJES
 - Primer contacto: Instagram. WhatsApp, llamada y correo solo cuando el cliente responda.
 
 Esta app es solo tuya. No publiques datos de clientes ni compartas el enlace.
+
+PENDIENTES EN AMARILLO
+- En una ficha: "Marcar como pendiente", elige la hora, pega el enlace y lo que ibas a escribirle al chat.
+- Al llegar la hora, la ficha sale en amarillo arriba de la lista y en el aviso de arriba. La app no avisa con el movil cerrado: pon tu alarma o usa el boton "Crear alarma en Google Calendar".
