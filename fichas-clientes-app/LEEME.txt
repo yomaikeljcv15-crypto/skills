@@ -1,13 +1,19 @@
-FICHAS DE CLIENTES - pasos para Cloudflare Pages (desde el móvil)
+FICHAS DE CLIENTES - Cloudflare Pages (desde el móvil)
 
-1. Entra en dash.cloudflare.com > Workers y Pages > Crear > Pages > "Cargar activos" (Direct Upload).
-2. Ponle un nombre al proyecto (por ejemplo: mis-fichas) y sube este .zip.
-3. Pulsa Implementar. Te dará un enlace tipo mis-fichas.pages.dev.
-4. Abre el enlace en Chrome del móvil > menú (tres puntos) > "Instalar app" o "Añadir a pantalla de inicio".
+PRIMERA VEZ
+1. dash.cloudflare.com > Workers y Pages > Crear > Pages > "Cargar activos".
+2. Nombre del proyecto (ej: mis-fichas), sube este .zip, Implementar.
+3. Abre el enlace .pages.dev en Chrome > menú (tres puntos) > "Instalar app".
 
-IMPORTANTE
-- Tus fichas se guardan en el navegador de ese enlace. Si lo abres desde otra dirección (por ejemplo la versión de Claude), verás las fichas vacías: no se comparten.
-- Para pasar datos: en la versión antigua, Copia de seguridad > Copiar respaldo; en la nueva, pegar y Restaurar.
-- Haz copias de seguridad de vez en cuando. Si borras los datos del navegador, se pierden.
-- Para actualizar la app más adelante, sube un zip nuevo al mismo proyecto.
-- Esta app es solo tuya. No publiques datos de clientes ni la compartas.
+ACTUALIZAR (version 2: pasos de contacto y mensajes)
+1. Antes de nada: abre la app > Copia de seguridad > "Copiar respaldo" y pegalo en tus notas.
+2. dash.cloudflare.com > Workers y Pages > tu proyecto (el mismo) > Implementaciones > "Crear implementacion" / "Cargar activos" > sube este .zip nuevo.
+3. Abre la app por el MISMO enlace y cierrala del todo y vuelve a abrirla una vez para que cargue la version nueva.
+Tus fichas NO se borran: se guardan en el navegador, ligadas a ese enlace, y la actualizacion no las toca. Solo se borran si creas un proyecto nuevo (otro enlace) o borras los datos del navegador.
+
+PRIMER USO DE LOS MENSAJES
+- Abre cualquier ficha > "Mensajes listos para copiar" > "Mi nombre y P.D.": pega la P.D. oficial de Hurbil. Se usa en todos los mensajes.
+- En cada ficha escribe el fallo que de verdad viste (uno solo) y el enlace de tu video.
+- Primer contacto: Instagram. WhatsApp, llamada y correo solo cuando el cliente responda.
+
+Esta app es solo tuya. No publiques datos de clientes ni compartas el enlace.

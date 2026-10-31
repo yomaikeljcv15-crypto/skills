@@ -113,6 +113,8 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:var(--in
 body{margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}
+.note{padding:10px 12px;border-radius:10px;background:var(--warn-soft);color:var(--warn);font-size:.92rem;font-weight:600}
+.pcard ol{margin:0;padding-left:20px;display:grid;gap:6px}
 </style>
 </head>
 <body>
@@ -170,10 +172,11 @@ var STEPS=[
  {id:'material',t:'Material del cliente recibido'},
  {id:'entregado',t:'Archivos entregados a Hurbil'}
 ];
+var msgTab='ig';
 var S={fichas:[]}, filtro='activos', tipoF='todos', qtxt='', openId=null, storeOk=true, saveT=null;
 
 function uid(){return 'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
-function blank(o){return Object.assign({id:uid(),tipo:'otro',nombre:'',apellido:'',negocio:'',lugar:'',extra:'',web:'',boceto:'',tel:'',tel2:'',mail:'',ig:'',maps:'',notas:'',pasos:{},escribio:'aun',decision:'pend',descartado:false,revisado:null,historial:[],orden:9999,creado:Date.now()},o||{})}
+function blank(o){return Object.assign({id:uid(),tipo:'otro',nombre:'',apellido:'',negocio:'',lugar:'',extra:'',web:'',boceto:'',tel:'',tel2:'',mail:'',ig:'',maps:'',notas:'',video:'',fb:'',fallo:'',oferta:'',halago:'',msg:{},pasos:{},escribio:'aun',decision:'pend',descartado:false,revisado:null,historial:[],orden:9999,creado:Date.now()},o||{})}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function mapsUrl(n,d){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(n+' '+(d||'')+' Valladolid')}
 
@@ -197,6 +200,32 @@ var ALOJ=[
  {n:'Hotel Rural La Enhorcadora',l:'Portillo (Valladolid)',t:'606 345 809',t2:'983 556 041',m:'correo@portillorural.com',g:'Google: a confirmar en Maps',no:'Hotel rural pequeño (4 habitaciones), sin web en su ficha oficial y con correo de dominio propio. Confirmar si la web actual está al día.'}
 ];
 
+
+var EXTRA={
+ 'Hotel Rural Casa Valimón':{fa:'quien quiere reservar no puede hacerlo desde vuestra web: le lleva a otra página o a llamar',of:'reservas',ha:'la valoración que tenéis (4,7 con 158 reseñas)'},
+ 'Campo y Lumbre':{fa:'el botón de llamar de la web no marca ningún número y el enlace de reservar tiene el dominio mal escrito',of:'web+google',ha:'la valoración que tenéis (4,8 con 75 reseñas)'},
+ 'La Casa del Valle I y II':{fa:'en la web no hay calendario ni forma de reservar, solo contacto, y hay enlaces vacíos y partes de 2018',of:'reservas',ha:'vuestra casa rural en Trigueros del Valle'},
+ 'Casa Las Perchas':{fa:'al probarla, la web daba error 404 en la portada y en la página de información',of:'web+google',ha:'vuestra casa en Piña de Esgueva',ver:1},
+ 'Las Ducas':{fa:'desde el móvil la web se ve en pequeño, como las webs antiguas',of:'web+google',ha:'vuestra casa en Villavieja del Cerro',ver:1},
+ 'Ambiente Rural':{fa:'la web que aparece en vuestra ficha oficial no me cargaba',of:'web+google',ha:'vuestra casa en Mélida, en Peñafiel',ver:1},
+ 'Entreviñas':{fa:'no he encontrado una web vuestra propia: solo aparecéis en portales y en la ficha oficial',of:'web+google',ha:'vuestra casa en San Bernardo, en Valbuena de Duero',ver:1},
+ 'Casa Alamar':{fa:'la web está montada en un constructor gratuito, se ve provisional y para reservar hay que llamar',of:'reservas',ha:'vuestra casa en Tiedra'},
+ 'Villa de Urueña (Casa de la Anunciada, Casa de los Ilustres y Casa de los Beatos)':{fa:'en la web no hay reserva online ni calendario: hay que escribir o llamar para saber si hay hueco',of:'reservas',ha:'tener tres casas en un pueblo tan visitado como Urueña'},
+ 'Casa de San Roque':{fa:'al abrir vuestra web me salió un aviso de página no segura',of:'web+google',ha:'vuestra casa en Molpeceres',ver:1},
+ 'Casa El Arrabal':{fa:'no he encontrado una web vuestra propia: solo aparecéis en portales y en la ficha oficial',of:'web+google',ha:'vuestra casa en Medina de Rioseco',ver:1},
+ 'La Ventanita de Rioseco':{fa:'no he encontrado una web donde consultar disponibilidad, solo el teléfono, y para una casa de 17 plazas pensada para grupos eso se queda corto',of:'reservas',ha:'vuestra casa de 17 plazas en Medina de Rioseco',ver:1},
+ 'Casa Rústica Rioseco':{fa:'no he encontrado una web vuestra propia: solo aparecéis en portales y en la ficha oficial',of:'web+google',ha:'vuestra casa en Medina de Rioseco',ver:1},
+ 'La Posada del Canal y La Casa del Corro':{fa:'la web de La Casa del Corro no me cargaba, y son dos alojamientos con webs separadas',of:'web+google',ha:'tener dos alojamientos en Villanueva de San Mancio',ver:1},
+ 'Hotel Rural La Enhorcadora':{fa:'no he encontrado una web vuestra en la ficha oficial',of:'web+google',ha:'vuestro hotel rural en Portillo',ver:1}
+};
+function migrate(){
+  S.cfg=S.cfg||{yo:'Yomaikel',pd:''};
+  S.fichas.forEach(function(f){
+    var b=blank();Object.keys(b).forEach(function(k){if(f[k]===undefined)f[k]=b[k]});
+    var x=EXTRA[f.negocio];
+    if(x&&f.tipo==='alojamiento'){if(!f.fallo)f.fallo=x.fa;if(!f.oferta)f.oferta=x.of;if(!f.halago)f.halago=x.ha}
+  });
+}
 function seed(){
   var out=[], i=0, now=Date.now();
   REST.split('\n').forEach(function(line){
@@ -212,8 +241,8 @@ function seed(){
 }
 
 function load(){
-  try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r);if(d&&Array.isArray(d.fichas)){S=d;return}}}catch(e){storeOk=false}
-  S={fichas:seed()};save();
+  try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r);if(d&&Array.isArray(d.fichas)){S=d;migrate();save();return}}}catch(e){storeOk=false}
+  S={fichas:seed()};migrate();save();
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));storeOk=true}catch(e){storeOk=false}showWarn()}
 function saveSoon(){clearTimeout(saveT);saveT=setTimeout(save,250)}
@@ -295,6 +324,96 @@ function dueBox(f){
    +'<button class="btn sm" data-act="drop" data-id="'+f.id+'">Lo dejo</button></div></div>';
 }
 
+
+var PRE=[['','Elegir un fallo típico…'],['la carta solo está en PDF y desde el móvil cuesta leerla','Carta solo en PDF'],['desde el móvil no se ve con claridad el horario ni el mapa','Sin horario o mapa claro'],['la web no me cargaba cuando la probé desde el móvil','Web que no carga'],['no encontré un botón para llamar o reservar con un toque','Sin botón de llamar o reservar'],['no he encontrado una web vuestra propia, solo la ficha de Google','No tiene web propia']];
+function parseR(f){var m=/^(.*?) · ★ ([\d,]+) · (\d+) reseñas/.exec(f.extra||'');return m?{n:parseFloat(m[2].replace(',','.')),ns:m[2],r:parseInt(m[3],10)}:null}
+function halago(f){
+  if(f.halago&&f.halago.trim())return f.halago.trim();
+  var p=parseR(f);
+  if(f.tipo==='restaurante'&&p){
+    if(p.n>=4.3)return 'la nota que tenéis en Google ('+p.ns+' con '+p.r+' reseñas)';
+    if(p.r>=1000)return 'que tanta gente hable de vosotros en Google (más de '+(Math.floor(p.r/500)*500)+' reseñas)';
+  }
+  return f.tipo==='alojamiento'?'vuestro alojamiento':'vuestro local';
+}
+function ofertaTxt(f){
+  var o=f.oferta||(f.tipo==='restaurante'?'rest':'web');
+  if(o==='rest')return 'una web a medida con la carta, el horario, el mapa y botones para llamar, escribiros por WhatsApp o reservar, y vuestra ficha de Google cuidada';
+  if(o==='reservas')return 'una web nueva a medida con un botón de solicitud de reserva claro (y, si más adelante os interesa un calendario de reservas con recordatorios, eso se ve aparte)';
+  if(o==='web+google')return 'una web nueva a medida, rápida en el móvil y con botones claros para escribiros o llamaros, y cuidar vuestra ficha de Google';
+  return 'una web nueva a medida, rápida en el móvil y con botones claros para escribiros o llamaros';
+}
+function cola(f){return f.tipo==='alojamiento'?'Así quien os encuentre desde el móvil ve la casa y puede escribiros o llamaros en un toque.':f.tipo==='restaurante'?'Así quien busque dónde comer ve vuestra carta y os llama, os escribe o reserva en un toque.':'Así quien os busque desde el móvil os encuentra y os contacta en un toque.'}
+function materiales(f){
+  var L=f.tipo==='alojamiento'?[
+   'Fotos reales de cada habitación (mínimo 3 por habitación), de la casa y del entorno',
+   '3 o 4 clips cortos de unos 5 segundos (10 como máximo): la casa, el entorno, las actividades',
+   'Datos prácticos: capacidad, hora de entrada y de salida, noches mínimas, mascotas, niños, cancelación, accesibilidad, wifi, parking y calefacción',
+   'Qué comidas ofrecéis y para quién',
+   'Si queréis los precios en la web o solo bajo consulta, y si tenéis planes o paquetes (fin de semana, celebraciones, empresas, grupos)',
+   'Enlaces de vuestro Instagram, Facebook, TikTok y de vuestra ficha de Google',
+   'De quién es vuestro dominio actual y quién lo gestiona']:[
+   'Vuestra carta completa (en texto o en una foto nítida) y, si queréis, los precios',
+   'Los alérgenos de cada plato. Si no los tenéis a mano, pondremos «Consulta los alérgenos con nuestro personal»',
+   'Horario completo, días de cierre y vacaciones',
+   'Fotos reales del local y de los platos',
+   '2 o 3 clips cortos de unos 5 segundos (10 como máximo): la sala, la cocina, los platos',
+   'Enlaces de vuestro Instagram, Facebook, TikTok y de vuestra ficha de Google',
+   'Cómo queréis que reserven: teléfono, WhatsApp, TheFork u otro',
+   'Si tenéis menú del día, terraza, comida para llevar, eventos o grupos, accesibilidad, mascotas o parking'];
+  L.push('Un «sí, autorizado» por escrito para poder usar vuestras fotos, textos y reseñas');
+  return L.map(function(x){return '- '+x}).join('\n');
+}
+function gen(f,key){
+  var yo=((S.cfg&&S.cfg.yo)||'Yomaikel').trim()||'Yomaikel';
+  var pd=((S.cfg&&S.cfg.pd)||'').trim()||'P.D. [PEGA AQUÍ LA P.D. OFICIAL DE HURBIL SOBRE PROTECCIÓN DE DATOS]';
+  var fa=f.fallo&&f.fallo.trim()?f.fallo.trim().replace(/[\s.]+$/,''):'[ESCRIBE AQUÍ UN SOLO FALLO QUE HAYAS COMPROBADO]';
+  var vid=(f.video&&f.video.trim())||'[ENLACE DEL VÍDEO]', bo=(f.boceto&&f.boceto.trim())||'[ENLACE DEL BOCETO]';
+  var perd=f.tipo==='alojamiento'?'reservas':'clientes';
+  var sal=f.nombre&&f.nombre.trim()?'Hola '+f.nombre.trim()+',':'Hola,';
+  if(key==='seg')return sal+' gracias por contestar y por darme la oportunidad.\n\nYa tenéis el boceto listo para que lo veáis: '+bo+'\n\nPara terminar la web real necesito algunas cosas de vuestra parte, cuando podáis y sin prisa:\n\n'+materiales(f)+'\n\nLo que tengáis a mano me lo podéis mandar por aquí mismo. Lo que no tengáis lo dejamos como «pendiente de confirmar» y no pasa nada.\n\nY cuando queráis, hacemos la videollamada de 15 minutos para repasarlo todo juntos.\n\nUn saludo,\n'+yo+' (colaboro con Hurbil Studio)';
+  if(key==='wa')return sal+' soy '+yo+', colaboro con Hurbil Studio.\n\nMe llamó la atención '+halago(f)+' y, buscándoos desde el móvil, vi una cosa que creo que os puede estar haciendo perder '+perd+': '+fa+'.\n\nPreparé un boceto sin compromiso de cómo podría quedar (vídeo de 90 segundos): '+vid+'\nUsé como referencia fotos y textos que ya tenéis publicados; si preferís que no, lo borro hoy mismo.\n\nMi propuesta es '+ofertaTxt(f)+'. '+cola(f)+'\n\nSi os interesa, os lo enseño en 15 minutos. Y si no, ningún problema.\n\n'+pd;
+  return sal+' soy '+yo+'.\n\nOs escribo porque me llamó la atención '+halago(f)+'. Buscándoos desde el móvil vi una cosa que creo que os puede estar haciendo perder '+perd+': '+fa+'.\n\nPor eso preparé un pequeño boceto de cómo podría quedar, sin compromiso. Es un vídeo de 90 segundos: '+vid+'\nPara hacerlo usé como referencia fotos y textos que ya tenéis publicados; si preferís que no, lo borro hoy mismo y sin problema.\n\nMi propuesta es '+ofertaTxt(f)+'. '+cola(f)+'\n\nSi os interesa, os lo enseño en 15 minutos. Y si no, ningún problema.\n\nUn saludo,\n'+yo+' (colaboro con Hurbil Studio)\n\n'+pd;
+}
+function getMsg(f,k){return typeof f.msg[k]==='string'?f.msg[k]:gen(f,k)}
+function refreshMsgBox(){var f=byId(openId),b=document.getElementById('msgBox');if(!f||!b||document.activeElement===b)return;if(typeof f.msg[msgTab]!=='string')b.value=gen(f,msgTab)}
+
+function pasoCard(f){
+  if(!active(f))return '';
+  var next=STEPS.filter(function(s){return !f.pasos[s.id]})[0], tit=title(f);
+  var maps=f.maps||mapsUrl(tit,f.lugar), gq='https://www.google.com/search?q='+encodeURIComponent(tit+' Valladolid instagram');
+  var soc=f.ig?igUrl(f.ig):url(f.fb);
+  var h='<div class="sec pcard"><h3>Paso 1 · Cómo contactarlo</h3>';
+  if(f.escribio==='si'){
+    h+='<p style="margin:0">Ya te respondió, así que puedes seguir por WhatsApp. Cuando acepte y tengas el boceto listo, usa el mensaje de <b>Seguimiento</b> de abajo.</p>';
+  }else if(f.ig||f.fb){
+    h+='<p style="margin:0">Escríbele por <b>'+(f.ig?'Instagram ('+esc(f.ig)+')':'Facebook')+'</b>. Copia el mensaje <b>Entrada · Instagram</b> de abajo, pégalo en el chat y retócalo si quieres.</p><p class="hint">Antes, revisa su ficha en Google Maps para confirmar que la web, el teléfono y las redes son los correctos.</p>';
+  }else{
+    h+='<p style="margin:0">No tiene Instagram ni Facebook apuntado. Haz esto:</p><ol><li>Abre su ficha en <b>Google Maps</b>: ahí suele estar la web, el teléfono y a veces su Instagram.</li><li>Prueba el botón «Buscar su Instagram».</li><li>Si lo encuentras, pégalo en el campo Instagram de <b>Datos</b>; al volver a abrir la ficha, este paso ya te dirá que le escribas por ahí.</li><li>Si no tiene ni Instagram ni Facebook, pasa al siguiente negocio o pídele a Hurbil que te lo presente. Nada de WhatsApp, llamada ni correo en frío'+(f.tel||f.tel2?', aunque tengas su número':'')+'.</li></ol>';
+  }
+  h+='<div class="links">'+lnk(soc,f.ig?'Abrir Instagram':'Abrir Facebook')+lnk(maps,'Revisar en Google Maps')+(soc?'':lnk(gq,'Buscar su Instagram'))+'</div>';
+  h+='<p class="hint" style="margin:0">'+(next?'Te toca ahora: <b>'+next.t+'</b>':'Ya completaste todos los pasos.')+'</p></div>';
+  return h;
+}
+function msgSection(f){
+  var k=msgTab, x=EXTRA[f.negocio], ver=f.tipo==='alojamiento'&&x&&x.ver&&f.fallo===x.fa;
+  var tabs=[['ig','Entrada · Instagram'],['wa','Entrada · WhatsApp'],['seg','Seguimiento']];
+  var has=typeof f.msg[k]==='string';
+  var h='<div class="sec"><h3>Mensajes listos para copiar</h3><div class="seg">'+tabs.map(function(t){return '<button data-act="mtab" data-v="'+t[0]+'" aria-pressed="'+(k===t[0])+'">'+t[1]+'</button>'}).join('')+'</div>';
+  if(k==='wa'&&f.escribio!=='si')h+='<div class="note">WhatsApp solo si ya te respondió o te presentaron. Si es el primer contacto, usa Instagram (regla de Hurbil: nada en frío). Puedes copiar el texto, pero no lo envíes todavía.</div>';
+  if(k==='seg'){
+    h+='<p class="hint">Para cuando el cliente ya dijo que sí y tienes el boceto listo. Si falta el enlace, pégalo en «URL de mi boceto», más abajo en Datos.</p>';
+  }else{
+    if(ver)h+='<div class="note">Comprueba este fallo desde tu móvil antes de enviarlo: lo apunté desde un servidor, no desde un móvil. Si ya no es así, cámbialo.</div>';
+    h+='<label class="f"><span class="lr"><span>Problema que viste (solo uno, comprobado)</span></span><textarea id="f_fallo" data-k="fallo" style="min-height:70px">'+esc(f.fallo)+'</textarea></label>';
+    h+='<label class="f"><span class="lr"><span>Fallos típicos</span></span><select id="f_pre">'+PRE.map(function(p){return '<option value="'+esc(p[0])+'">'+p[1]+'</option>'}).join('')+'</select></label>';
+    h+=fld(f,'Enlace de mi vídeo de 90 s','video','url',{ph:'https://…'});
+  }
+  h+='<label class="f"><span class="lr"><span>Mensaje (puedes editarlo aquí)</span></span><textarea id="msgBox" data-msg="'+k+'" style="min-height:300px">'+esc(getMsg(f,k))+'</textarea></label>';
+  h+='<div class="links"><button class="btn pri" data-act="mcopy">Copiar mensaje</button><button class="btn" id="mreset" data-act="mreset"'+(has?'':' hidden')+'>Restablecer texto</button></div>';
+  h+='<details'+(((S.cfg&&S.cfg.pd)||'').trim()?'':' open')+'><summary>Mi nombre y P.D. (se usan en todos los mensajes)</summary><div style="display:grid;gap:10px;margin-top:10px"><label class="f"><span class="lr"><span>Mi nombre</span></span><input id="cfg_yo" data-cfg="yo" type="text" value="'+esc((S.cfg&&S.cfg.yo)||'Yomaikel')+'"></label><label class="f"><span class="lr"><span>P.D. de protección de datos (la oficial del Kit de Hurbil)</span></span><textarea id="cfg_pd" data-cfg="pd" placeholder="Pega aquí la P.D. oficial">'+esc((S.cfg&&S.cfg.pd)||'')+'</textarea></label></div></details>';
+  return h+'</div>';
+}
 function fld(f,label,k,type,opts){
   opts=opts||{};
   var cp=opts.copy&&f[k]?'<button type="button" class="cp" data-act="copy" data-text="'+esc(f[k])+'">Copiar</button>':'';
@@ -316,6 +435,7 @@ function renderSheet(){
    +(due(f)?dueBox(f):'')
    +(started(f)&&active(f)&&!due(f)?'<div class="links"><button class="btn sm" data-act="keep" data-id="'+f.id+'">Marcar como revisado hoy</button></div>':'')+'</div>';
 
+  h+=pasoCard(f);h+=msgSection(f);
   h+='<div class="sec"><h3>Paso a paso</h3><div class="bar"><i style="width:'+Math.round(nSteps(f)/STEPS.length*100)+'%"></i></div><p class="hint">'+nSteps(f)+' de '+STEPS.length+' completados</p><ul class="steps">'
    +STEPS.map(function(s){var on=!!f.pasos[s.id];return '<li><button class="step" role="checkbox" aria-checked="'+on+'" data-act="step" data-s="'+s.id+'"><span class="bx">'+(on?'✓':'')+'</span><span><span>'+s.t+'</span><small>'+(on?'Hecho el '+fdate(f.pasos[s.id]):(s.h||''))+'</small></span></button></li>'}).join('')+'</ul></div>';
 
@@ -324,7 +444,7 @@ function renderSheet(){
    +'<div><p class="q">¿El cliente aceptó?</p>'+seg('decision',[['pend','Pendiente'],['si','Sí, aceptó'],['no','No aceptó','no']],f.decision)+'</div>'
    +'<div><p class="q">¿La propuesta sigue en pie?</p>'+(active(f)?'<p class="hint" style="margin-bottom:8px">Sí, sigue en pie.</p><button class="btn sm bad" data-act="drop" data-id="'+f.id+'">Dejarla (descartar)</button>':'<p class="hint" style="margin-bottom:8px">No, está descartada.</p><button class="btn sm" data-act="react" data-id="'+f.id+'">Reactivar</button>')+'</div></div>';
 
-  h+='<div class="sec"><h3>Abrir</h3><div class="links">'+lnk(igUrl(f.ig),'Instagram')+lnk(url(f.web),'Su web')+lnk(url(f.boceto),'Mi boceto')+lnk(f.maps,'Google Maps')+'</div>'
+  h+='<div class="sec"><h3>Abrir</h3><div class="links">'+lnk(igUrl(f.ig),'Instagram')+lnk(url(f.fb),'Facebook')+lnk(url(f.web),'Su web')+lnk(url(f.boceto),'Mi boceto')+lnk(f.maps,'Google Maps')+'</div>'
    +'<p class="q" style="margin:4px 0 0">Contacto directo</p>';
   if(unlocked){
     h+='<div class="links">'+lnk(waUrl(f.tel||f.tel2),'WhatsApp')+(f.tel?lnk('tel:'+f.tel.replace(/[^\d+]/g,''),'Llamar'):'')+(f.mail?lnk('mailto:'+f.mail,'Correo'):'')+'</div><p class="hint">Desbloqueado porque ya te escribió. Si el botón de llamar no funciona, copia el número de abajo.</p>';
@@ -340,7 +460,7 @@ function renderSheet(){
    +fld(f,'Lugar','lugar','text')
    +fld(f,'Web del negocio (vacío si no tiene)','web','url',{ph:'https://…'})
    +fld(f,'URL de mi boceto','boceto','url',{ph:'https://…'})
-   +fld(f,'Instagram','ig','text',{ph:'@usuario o enlace'})
+   +fld(f,'Instagram','ig','text',{ph:'@usuario o enlace'})+fld(f,'Facebook','fb','text',{ph:'enlace de su página'})
    +fld(f,'Teléfono','tel','tel',{im:'tel',copy:1})
    +fld(f,'Otro número / WhatsApp','tel2','tel',{im:'tel',copy:1})
    +fld(f,'Correo','mail','email',{im:'email',copy:1})
@@ -354,7 +474,7 @@ function renderSheet(){
   sb.scrollTop=top;
 }
 
-function openSheet(id){openId=id;document.getElementById('sheet').hidden=false;document.getElementById('sheet').scrollTop=0;renderSheet();document.getElementById('main').style.visibility='hidden'}
+function openSheet(id){openId=id;msgTab='ig';document.getElementById('sheet').hidden=false;document.getElementById('sheet').scrollTop=0;renderSheet();document.getElementById('main').style.visibility='hidden'}
 function closeSheet(){save();openId=null;document.getElementById('sheet').hidden=true;document.getElementById('main').style.visibility='';renderList()}
 function toast(t){var e=document.getElementById('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){e.hidden=true},2200)}
 function copy(text,msg){
@@ -381,24 +501,33 @@ document.addEventListener('click',function(e){
     case 'drop':f.descartado=true;f.revisado=now;log(f,'Descartada');save();refresh();break;
     case 'react':f.descartado=false;if(f.decision==='no')f.decision='pend';f.revisado=now;log(f,'Reactivada');save();refresh();break;
     case 'copy':copy(t.dataset.text);break;
+    case 'mtab':msgTab=t.dataset.v;renderSheet();break;
+    case 'mreset':delete f.msg[msgTab];save();renderSheet();break;
+    case 'mcopy':copy(document.getElementById('msgBox').value,'Mensaje copiado');log(f,'Copié el mensaje: '+({ig:'entrada Instagram',wa:'entrada WhatsApp',seg:'seguimiento'})[msgTab]);save();break;
     case 'del':if(!delArmed){delArmed=true;t.textContent='Toca otra vez para borrar';setTimeout(function(){delArmed=false;if(t.isConnected)t.textContent='Borrar esta ficha'},3500)}else{delArmed=false;S.fichas=S.fichas.filter(function(x){return x.id!==openId});save();closeSheet()}break;
     case 'backup':copy(JSON.stringify(S),'Respaldo copiado');break;
     case 'restore':
       if(!restoreArmed){restoreArmed=true;t.textContent='Toca otra vez para reemplazar todo';setTimeout(function(){restoreArmed=false;t.textContent='Restaurar (reemplaza todo)'},3500);break}
       restoreArmed=false;t.textContent='Restaurar (reemplaza todo)';
-      try{var d=JSON.parse(document.getElementById('restoreTxt').value);if(!d||!Array.isArray(d.fichas))throw 0;S=d;save();renderList();toast('Respaldo restaurado')}catch(err){toast('El texto no es un respaldo válido')}
+      try{var d=JSON.parse(document.getElementById('restoreTxt').value);if(!d||!Array.isArray(d.fichas))throw 0;S=d;migrate();save();renderList();toast('Respaldo restaurado')}catch(err){toast('El texto no es un respaldo válido')}
       break;
   }
 });
 document.addEventListener('input',function(e){
   var t=e.target;
   if(t.id==='q'){qtxt=t.value.trim().toLowerCase();renderList();return}
+  if(t.dataset&&t.dataset.msg&&openId){var f0=byId(openId);f0.msg[t.dataset.msg]=t.value;var rb=document.getElementById('mreset');if(rb)rb.hidden=false;saveSoon();return}
+  if(t.dataset&&t.dataset.cfg){S.cfg[t.dataset.cfg]=t.value;saveSoon();refreshMsgBox();return}
   if(!t.dataset||!t.dataset.k||!openId)return;
   var f=byId(openId);f[t.dataset.k]=t.value;
+  if(['fallo','video','boceto','nombre','apellido'].indexOf(t.dataset.k)>=0)refreshMsgBox();
   if(t.dataset.k==='negocio'||t.dataset.k==='nombre'||t.dataset.k==='apellido')document.getElementById('shTitle').textContent=title(f);
   saveSoon();
 });
-document.addEventListener('change',function(e){if(e.target.id==='f_tipo'&&openId){save();renderSheet()}});
+document.addEventListener('change',function(e){
+  if(e.target.id==='f_tipo'&&openId){save();renderSheet()}
+  if(e.target.id==='f_pre'&&openId&&e.target.value){var f=byId(openId);f.fallo=e.target.value;var ta=document.getElementById('f_fallo');if(ta)ta.value=f.fallo;save();refreshMsgBox();e.target.value=''}
+});
 setInterval(function(){if(!openId&&!(document.activeElement&&document.activeElement.id==='q'))renderList()},60000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&!openId)renderList()});
 
