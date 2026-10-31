@@ -1,0 +1,393 @@
+<title>Mis fichas de clientes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: una lista de fichas tocables; cada ficha se abre a pantalla completa con datos, paso a paso y estado del trato. */
+:root{
+  --bg:#eef1ee; --card:#ffffff; --ink:#1b2420; --mute:#5d6a64; --line:#d9dfdb;
+  --accent:#0e7a62; --accent-ink:#ffffff; --accent-soft:#d8efe8;
+  --warn:#8a5a00; --warn-soft:#fbecc8; --bad:#9b2c2c; --bad-soft:#f6dcdc;
+  --info:#24508f; --info-soft:#dce7f7; --off:#6b746f; --off-soft:#e4e8e5;
+  --f-display:'Familjen Grotesk',system-ui,sans-serif; --f-body:'Figtree',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121715; --card:#1c2420; --ink:#e8eeea; --mute:#9aa8a1; --line:#2d3833;
+  --accent:#3fc4a1; --accent-ink:#06231b; --accent-soft:#17382f;
+  --warn:#f0c36a; --warn-soft:#3a2f12; --bad:#f09a9a; --bad-soft:#3d1f1f;
+  --info:#8db6f0; --info-soft:#1b2c47; --off:#a0aaa5; --off-soft:#27302c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121715; --card:#1c2420; --ink:#e8eeea; --mute:#9aa8a1; --line:#2d3833;
+  --accent:#3fc4a1; --accent-ink:#06231b; --accent-soft:#17382f;
+  --warn:#f0c36a; --warn-soft:#3a2f12; --bad:#f09a9a; --bad-soft:#3d1f1f;
+  --info:#8db6f0; --info-soft:#1b2c47; --off:#a0aaa5; --off-soft:#27302c; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45}
+*{box-sizing:border-box}
+.wrap{max-width:760px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance}
+h1{font-size:1.7rem;line-height:1.15}
+.sub{color:var(--mute);margin:4px 0 0}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{min-height:44px;padding:8px 16px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);font-weight:600}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.bad{color:var(--bad);border-color:var(--bad)}
+.btn.sm{min-height:38px;padding:4px 12px;font-size:.92rem}
+.btn[disabled],.btn.locked{opacity:.5;cursor:not-allowed}
+.top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.search{width:100%;min-height:46px;margin-top:16px;padding:8px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--card)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{min-height:40px;padding:6px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--card);font-weight:500}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip b{font-variant-numeric:tabular-nums}
+.alert{margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--warn-soft);color:var(--warn);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-weight:600}
+.list{display:grid;gap:10px;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;display:grid;gap:10px}
+.card:hover{border-color:var(--accent)}
+.card .row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card h3{font-size:1.08rem;line-height:1.2;overflow-wrap:anywhere}
+.card p{margin:2px 0 0;color:var(--mute);font-size:.92rem;overflow-wrap:anywhere}
+.st{flex:none;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.st-new{background:var(--off-soft);color:var(--off)}
+.st-prep{background:var(--info-soft);color:var(--info)}
+.st-wait{background:var(--warn-soft);color:var(--warn)}
+.st-wrote{background:var(--info-soft);color:var(--info)}
+.st-yes{background:var(--accent-soft);color:var(--accent)}
+.st-no{background:var(--off-soft);color:var(--off)}
+.bar{height:8px;border-radius:99px;background:var(--off-soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;color:var(--mute);font-variant-numeric:tabular-nums}
+.due{border-radius:10px;background:var(--warn-soft);color:var(--warn);padding:10px 12px;display:grid;gap:8px}
+.due strong{font-size:.98rem}
+.due .acts{display:flex;gap:8px;flex-wrap:wrap}
+.due .btn{background:var(--card);color:var(--ink)}
+.empty{padding:32px 8px;text-align:center;color:var(--mute)}
+.foot{margin-top:28px;display:grid;gap:10px}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+summary{font-weight:600;cursor:pointer;min-height:28px}
+textarea{width:100%;min-height:90px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg)}
+
+/* ficha */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding-top:env(safe-area-inset-top,0px)}
+.sheet[hidden]{display:none}
+.sh-head{position:sticky;top:0;z-index:2;background:var(--bg);border-bottom:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));display:flex;gap:10px;align-items:center}
+.sh-head h2{font-size:1.1rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sh-body{max-width:760px;margin:0 auto;padding-block:16px 64px;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));display:grid;gap:18px}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:12px}
+.sec>h3{font-size:1.02rem}
+.hint{color:var(--mute);font-size:.9rem;margin:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.grid2{grid-template-columns:1fr}}
+label.f{display:grid;gap:4px;font-size:.88rem;font-weight:600;color:var(--mute);min-width:0}
+label.f .lr{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:24px}
+label.f input,label.f textarea,label.f select{font-weight:400;color:var(--ink);min-height:44px;width:100%;padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);min-width:0}
+label.f textarea{min-height:96px}
+.cp{border:0;background:none;color:var(--accent);font-weight:700;font-size:.85rem;padding:2px 6px;min-height:24px}
+.steps{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.step{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;min-height:48px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg)}
+.step .bx{flex:none;width:24px;height:24px;border-radius:7px;border:2px solid var(--mute);display:grid;place-items:center;font-weight:800;line-height:1;margin-top:1px}
+.step[aria-checked="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.step[aria-checked="true"] .bx{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.step small{display:block;color:var(--mute)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{flex:1 1 auto;min-height:46px;padding:8px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg button.no[aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:var(--bg)}
+.q{font-weight:600;margin:0 0 6px}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+a.btn{display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)}
+.log{margin:0;padding:0;list-style:none;display:grid;gap:4px;font-size:.88rem;color:var(--mute)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:600;max-width:90vw}
+.toast[hidden]{display:none}
+.warnbox{margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--bad-soft);color:var(--bad);font-weight:600}
+</style>
+
+<div class="wrap" id="main">
+  <div class="top">
+    <div>
+      <h1>Mis fichas de clientes</h1>
+      <p class="sub">Un solo lugar para cada negocio: datos, paso a paso y si el trato sigue en pie.</p>
+    </div>
+    <button class="btn pri" data-act="new" id="btnNew">+ Nueva ficha</button>
+  </div>
+  <div id="warn"></div>
+  <div id="banner"></div>
+  <input class="search" id="q" type="search" placeholder="Buscar por negocio, nombre o lugar" aria-label="Buscar">
+  <div class="chips" id="tipos" role="group" aria-label="Tipo de negocio"></div>
+  <div class="chips" id="filtros" role="group" aria-label="Estado"></div>
+  <div class="list" id="list"></div>
+
+  <div class="foot">
+    <details>
+      <summary>Copia de seguridad</summary>
+      <p class="hint" style="margin:10px 0">Tus fichas se guardan en este navegador. Si borras los datos del navegador se pierden, así que copia el respaldo de vez en cuando y guárdalo en tus notas.</p>
+      <div class="links"><button class="btn sm" data-act="backup">Copiar respaldo</button></div>
+      <label class="f" style="margin-top:12px"><span>Restaurar: pega aquí un respaldo</span>
+        <textarea id="restoreTxt" placeholder="Pega el texto del respaldo"></textarea></label>
+      <div class="links" style="margin-top:8px"><button class="btn sm bad" data-act="restore" id="btnRestore">Restaurar (reemplaza todo)</button></div>
+    </details>
+    <p class="hint">Recordatorio de Hurbil: el primer contacto va por Instagram, con vídeo y sin precio. WhatsApp, llamada y correo se desbloquean en cada ficha cuando el cliente te responde.</p>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sh-head">
+    <button class="btn sm" data-act="close">← Volver</button>
+    <h2 id="shTitle"></h2>
+  </div>
+  <div class="sh-body" id="shBody"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+'use strict';
+var KEY='fichas_clientes_v1', DAY=864e5;
+var STEPS=[
+ {id:'revisar',t:'Revisé su web y redes desde el móvil',h:'10 minutos: ¿tiene web?, ¿se ve bien?, ¿tiene Instagram?'},
+ {id:'boceto',t:'Boceto hecho'},
+ {id:'subido',t:'Boceto subido (enlace oculto)',h:'Pega el enlace en «URL de mi boceto».'},
+ {id:'hurbil',t:'Hurbil revisó la propuesta'},
+ {id:'enviado',t:'Primer mensaje enviado por Instagram',h:'Con vídeo de ~90 s, sin precio y con la P.D. de datos.'},
+ {id:'seguimiento',t:'Seguimiento a los 2–3 días'},
+ {id:'video',t:'Videollamada de 15 min hecha'},
+ {id:'material',t:'Material del cliente recibido'},
+ {id:'entregado',t:'Archivos entregados a Hurbil'}
+];
+var S={fichas:[]}, filtro='activos', tipoF='todos', qtxt='', openId=null, storeOk=true, saveT=null;
+
+function uid(){return 'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function blank(o){return Object.assign({id:uid(),tipo:'otro',nombre:'',apellido:'',negocio:'',lugar:'',extra:'',web:'',boceto:'',tel:'',tel2:'',mail:'',ig:'',maps:'',notas:'',pasos:{},escribio:'aun',decision:'pend',descartado:false,revisado:null,historial:[],orden:9999,creado:Date.now()},o||{})}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function mapsUrl(n,d){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(n+' '+(d||'')+' Valladolid')}
+
+var REST='Turina Bar Cocina|Cocina castellana|C. Turina, 18|4,9|103\nCasa Azcona|Cocina castellana|C. de Linares, 46|4,8|764\nDITALY|Italiana|Pl. del Pte., 1|4,7|2160\nRestaurante asador Asados Carolina|Parrilla|Calle de S. Martín, 15|4,7|1255\nGastroBar Pasión|Restaurante|C. Pasión, 6|4,7|558\nBar Restaurante los Molinos|Parrilla|C. de los Molinos, 5|4,7|535\nHisupo|Cocina asiática|C. de Hernando de Acuña, 31, B|4,7|373\nCallejón de Ricote|Pizza|C. Peña de Francia, 13|4,7|264\nOASIS RESTAURANTE|Marroquí|C. de la Cigüeña, 18|4,7|247\nLa Parrilla De San Lorenzo|Cocina castellana|C. de Pedro Niño, 1 (Monasterio de San Joaquín y Santa Ana)|4,6|5383\nRestaurante Niza|Cocina ecléctica|C. Padilla, 10|4,6|3904\nLa Cocina de Manuel|Española|C. Álvarez Taladriz, 4|4,6|1767\nRestaurante Paco Espinosa|Marisco|P.º Obregón, 16|4,6|1465\nRestaurante River Valley|Española|C. de Panaderos, 35|4,6|817\nRestaurante "Aquí mismo"|Española|C. Titanio, 6|4,6|764\nRestaurante Holidays-LUISMI.|Restaurante|C. Guadiana, 25|4,6|703\nSibaritas Klub|Alta cocina|Av. de Salamanca, 59, 10º planta|4,6|667\nEl Rincón de Lagunilla|Restaurante|C. Dos de Mayo, 5|4,6|303\nBraseria de Castilla|Parrilla|C. de Portillo de Balboa, 47|4,6|208\nBar-Restaurante Confortauto|Española|C. de Pilar Miró, 11|4,6|191\nEh Voilà! Crêpstaurante Casual|Crepería|C. Marqués del Duero, 7|4,5|4270\nRestaurante asador El Figón de Recoletos|Cocina castellana|C. Acera de Recoletos, 3|4,5|2993\nHacheQú|Cocina ecléctica|C. Macías Picavea, 7|4,5|2532\nLas 3 Bellotas|Restaurante|C. Industrias, 5|4,5|1989\nRioluz Gastronomía|Parrilla|Pl. del Milenio, s/n|4,5|1746\nEl Consejero del Rey|Restaurante|C. Francisco Zarandona, 6|4,5|1447\nRestaurante Gabi García Valladolid|Cocina castellana|Vereda, 2|4,5|1160\nRestaurante Trigo|Alta cocina|C. Jorge Guillén, 6|4,5|1148\nRestaurante Totol Naj|Mexicana|C. Sta. María, 19|4,5|1027\nRestaurante Los Chopos|Española|Urbanización La Cumbre, C. de los Chopos, 14|4,5|762\nLa Bambalina|Cocina castellana|Pl. Martí y Monsó, 2|4,5|717\nLa Cotufa|Venezolana|C. del Puente Colgante, 47|4,5|674\nBar Varna|Parrilla|C. San José de Calasanz, 67|4,5|660\nArrocería Sepionet|Mediterránea|C. Rastro, 6|4,5|611\nESQUINA COLÓN|Cocina castellana|Av. de Colón, 163|4,5|537\nRestaurante Pangea moregar|Parrilla|C. Estadio, 5|4,5|479\nRestaurante Miguel Ángel|Española|C. de Mantilla, 1|4,5|337\nGastrobar Canal de Castilla|Cocina castellana|Av. de Gijón, 10|4,5|257\nLa Corrala del Val|Taberna|Pl. Val, 1|4,5|245\nEl Mañoso|Restaurante|C. Fontiveros, 4|4,3|339\nOso food|Restaurante||4,8|65\nLa cazuela de Doña Inés|Española||4,6|91\nRestaurante Piedras Blancas|Española||4,6|62\nRestaurante Jero|Restaurante||4,4|5694\nLa Famiglia se sienta a la mesa|Italiana||4,4|4170\nRestaurante El Barrio|Restaurante||4,4|3838\nGastrobar Sabores|Española||4,4|3124\nLas Aldabas|Española||4,4|1844\nRestaurante Mesón Don Pelayo|Cocina castellana||4,4|1719\nEl Patio del Olivo|Parrilla||4,4|1566\nLa Berrea|Parrilla||4,4|1188\nPuerto Chico|Restaurante||4,4|1098\n5 Gustos|Mediterránea||4,4|1047\nLos Llanillos|Parrilla||4,4|900\nDon Txipirón|Restaurante||4,4|728\nRestaurante Buena Brasa|Parrilla||4,4|684\nLa Cartuja|Restaurante||4,4|622\nRestaurante El Majao de Sebi|Restaurante||4,4|588\nEl Toro Bar Restaurante|Parrilla||4,4|559\nPiel Canela Gastrobar|Cocina castellana||4,4|551\nLa Dársena de La Victoria|Mediterránea||4,4|544\nRestaurante La Parva|Parrilla||4,4|524\nEl Lagar|Fusión||4,4|293\nRestaurante los Jerónimos|Restaurante||4,4|121\nRestaurante Aquarium|Mediterránea||4,3|2008\nRestaurante Terrabuey - Maruquesa|Parrilla||4,3|1467\nRestaurante La Ferroviaria|Española||4,3|908\nRestaurante Maribárbola|Parrilla||4,3|880\nLa Sal|Parrilla||4,3|815\nAzul Mediterráneo|Mediterránea||4,3|648\nRestaurante Caycabone|Restaurante||4,3|458\nCasa Manolo|Cocina gallega||4,3|449\nLa Fábrica de Secretos|Española||4,3|178\nLos Zagales Restaurante|Restaurante||4,2|9215\nRestaurante el Surco|Parrilla||4,2|3473\nRestaurante Vinotinto|Parrilla||4,2|3473\nArrocería La Raíz|Restaurante||4,2|3058\nLe Bistró|Cocina ecléctica||4,2|2973\nLa Tarara Valladolid|Parrilla||4,2|2754\nTaberna Obregón|Parrilla||4,2|1755\nMesón Don Enrique|Cocina castellana||4,2|1473\nRestaurante Montellén|Parrilla||4,2|1375\nRestaurante RAZA|Brasería||4,2|659\nRestaurante Mi casa|Parrilla||4,2|587\nLa Pícara|Parrilla||4,1|2993\nRestaurante Colombo|Parrilla||4,1|1887\nRestaurante Los Ilustres|Cocina castellana||4,0|1598\nLa Criolla|Restaurante||3,7|2226';
+
+var ALOJ=[
+ {n:'Hotel Rural Casa Valimón',l:'Santibáñez de Valcorba (VA-203, km 8,8)',t:'649 498 515',w:'casavalimon.com',ig:'@casavalimon',g:'Google: 4,7 · 158 reseñas (según portal)',no:'Quien quiere reservar no puede hacerlo en su web: le manda a TopRural o a llamar. Web de 2022; los precios no dicen si llevan impuestos ni de qué temporada son.'},
+ {n:'Campo y Lumbre',l:'Benafarces, Calle Cantarranas, 1',t:'639 156 166',m:'info@campoylumbre.com',w:'campoylumbre.com',g:'Google: 4,8 · 75 reseñas (según portal)',nom:'Luis',ape:'Chico Luque',no:'Cliente de referencia: boceto ya hecho. Su web: el botón de llamar no marca número, el enlace de reservar tiene el dominio mal escrito y el blog parado desde marzo de 2025. El Instagram que enlaza es un perfil personal, no el de la casa.',hecho:['revisar','boceto']},
+ {n:'La Casa del Valle I y II',l:'Trigueros del Valle, C/ Provincia 29-31',t:'630 064 424',w:'lacasadelvalle.com',g:'Google: sin dato comprobado',no:'Móvil con WhatsApp. Su web no tiene calendario ni reserva; solo contacto, email y WhatsApp. Menús repetidos, enlaces vacíos y partes de 2018. Enlaza a instagram.com sin cuenta: búscala tú.'},
+ {n:'Casa Las Perchas',l:'Piña de Esgueva, C/ Barrio Nuevo, 12',t:'658 318 486',w:'casalasperchas.com',g:'Google: 4,0 · 17 reseñas (según portal)',no:'Móvil con WhatsApp. El 30/10 su web daba error 404 en portada e información. Compruébalo desde el móvil. Instagram: no encontrado.'},
+ {n:'Las Ducas',l:'Villavieja del Cerro (Valladolid)',t:'615 711 539',m:'lasducas@casarurallasducas.es',w:'http://www.casarurallasducas.es',g:'Google: a confirmar en Maps',no:'Web antigua: no declara adaptación a móvil. Sin Instagram enlazado ni reserva online. Comprobar cómo se ve desde el móvil.'},
+ {n:'Ambiente Rural',l:'Mélida, Peñafiel (Valladolid)',t:'653 847 711',t2:'983 470 917',m:'melidawines@gmail.com',w:'www.casaruralenpenafiel.es',g:'Google: a confirmar en Maps',no:'La web de su ficha oficial no cargaba desde el servidor. Comprobar desde el móvil si está caída.'},
+ {n:'Entreviñas',l:'San Bernardo, Valbuena de Duero (Valladolid)',t:'686 519 373',m:'mariagarciavelasco@hotmail.es',g:'Google: a confirmar en Maps',no:'Su ficha oficial no incluye web. Confirmar si tiene web o solo portales.'},
+ {n:'Casa Alamar',l:'Tiedra (Valladolid)',t:'629 873 125',m:'yanko501@hotmail.es',w:'http://alamartiedrano.es.tl',g:'Google: a confirmar en Maps',no:'Web en constructor gratuito (es.tl), sin reserva propia ni Instagram enlazado. Un solo teléfono de contacto.'},
+ {n:'Villa de Urueña (Casa de la Anunciada, Casa de los Ilustres y Casa de los Beatos)',l:'Urueña (Valladolid)',t:'626 847 133',m:'casarural@villadeuruena.es',w:'https://www.villadeuruena.es',ig:'@villadeuruena',g:'Google: a confirmar en Maps',no:'Tres casas en un pueblo muy visitado. Su web es sencilla, de 2024, sin reserva online ni calendario. Sí enlaza su Instagram.'},
+ {n:'Casa de San Roque',l:'Molpeceres, Torre de Peñafiel (Valladolid)',t:'637 847 808',m:'yucaduran@yahoo.es',w:'http://www.molpeceres.es.tl',g:'Google: a confirmar en Maps',no:'Constructor gratuito (es.tl); desde el servidor daba error de certificado. Abrir antes su web en el móvil.'},
+ {n:'Casa El Arrabal',l:'Medina de Rioseco (Valladolid)',t:'638 959 868',m:'casaelarrabal@gmail.com',g:'Google: a confirmar en Maps',no:'Ficha oficial sin web, solo correo gmail. 8 plazas. Confirmar si tiene web.'},
+ {n:'La Ventanita de Rioseco',l:'Medina de Rioseco (Valladolid)',t:'629 538 494',t2:'983 514 810',g:'Google: a confirmar en Maps',no:'Casa grande de 17 plazas (buena para grupos), sin web ni correo en su ficha oficial. Confirmar si tiene web.'},
+ {n:'Casa Rústica Rioseco',l:'Medina de Rioseco (Valladolid)',t:'600 054 613',t2:'678 981 284',g:'Google: a confirmar en Maps',no:'Sin web ni correo en su ficha oficial. Confirmar si tiene web propia.'},
+ {n:'La Posada del Canal y La Casa del Corro',l:'Villanueva de San Mancio (Valladolid)',t:'610 521 204',t2:'983 700 705',m:'info@laposadadelcanal.com',w:'https://www.laposadadelcanal.com',g:'Google: a confirmar en Maps',no:'Mismo propietario, dos alojamientos. La web de la posada funciona; la de La Casa del Corro (lacasadelcorro.com) no cargaba desde el servidor. Idea: unificar las dos.'},
+ {n:'Hotel Rural La Enhorcadora',l:'Portillo (Valladolid)',t:'606 345 809',t2:'983 556 041',m:'correo@portillorural.com',g:'Google: a confirmar en Maps',no:'Hotel rural pequeño (4 habitaciones), sin web en su ficha oficial y con correo de dominio propio. Confirmar si la web actual está al día.'}
+];
+
+function seed(){
+  var out=[], i=0, now=Date.now();
+  REST.split('\n').forEach(function(line){
+    var p=line.split('|'); i++;
+    out.push(blank({tipo:'restaurante',negocio:p[0],lugar:p[2]?p[2]+', Valladolid':'Valladolid',extra:p[1]+' · ★ '+p[3]+' · '+p[4]+' reseñas',maps:mapsUrl(p[0],p[2]),orden:i,notas:i<=40?'Entre los 40 con más oportunidad. Datos de Google Maps del 31/10/2026; web, teléfono y redes por comprobar.':'Datos de Google Maps del 31/10/2026; web, teléfono y redes por comprobar.'}));
+  });
+  ALOJ.forEach(function(a,k){
+    var f=blank({tipo:'alojamiento',negocio:a.n,nombre:a.nom||'',apellido:a.ape||'',lugar:a.l,extra:a.g||'',web:a.w||'',tel:a.t||'',tel2:a.t2||'',mail:a.m||'',ig:a.ig||'',maps:mapsUrl(a.n,a.l),notas:a.no||'',orden:1000+k});
+    if(a.hecho){a.hecho.forEach(function(s){f.pasos[s]=now});f.revisado=now;f.historial.push({t:now,x:'Ficha cargada con pasos ya hechos'})}
+    out.push(f);
+  });
+  return out;
+}
+
+function load(){
+  try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r);if(d&&Array.isArray(d.fichas)){S=d;return}}}catch(e){storeOk=false}
+  S={fichas:seed()};save();
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));storeOk=true}catch(e){storeOk=false}showWarn()}
+function saveSoon(){clearTimeout(saveT);saveT=setTimeout(save,250)}
+function showWarn(){document.getElementById('warn').innerHTML=storeOk?'':'<div class="warnbox">Este navegador no deja guardar. Usa «Copia de seguridad» para no perder lo que apuntes.</div>'}
+
+function started(f){return Object.keys(f.pasos).length>0||f.escribio==='si'}
+function active(f){return !f.descartado&&f.decision!=='no'}
+function due(f){return active(f)&&started(f)&&f.revisado&&Date.now()-f.revisado>DAY}
+function nSteps(f){return STEPS.filter(function(s){return f.pasos[s.id]}).length}
+function status(f){
+  if(!active(f))return ['Descartado','st-no'];
+  if(f.decision==='si')return ['Aceptó','st-yes'];
+  if(f.escribio==='si')return ['Me escribió','st-wrote'];
+  if(f.pasos.enviado)return ['Esperando respuesta','st-wait'];
+  if(started(f))return ['En preparación','st-prep'];
+  return ['Sin empezar','st-new'];
+}
+function hace(ts){if(!ts)return 'sin revisar';var m=Math.floor((Date.now()-ts)/6e4);if(m<1)return 'hace un momento';if(m<60)return 'hace '+m+' min';var h=Math.floor(m/60);if(h<48)return 'hace '+h+' h';return 'hace '+Math.floor(h/24)+' días'}
+function fdate(ts){return new Date(ts).toLocaleString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
+function title(f){return f.negocio||[f.nombre,f.apellido].filter(Boolean).join(' ')||'Ficha sin nombre'}
+function log(f,x){f.historial.unshift({t:Date.now(),x:x});f.historial=f.historial.slice(0,40)}
+function byId(id){return S.fichas.find(function(f){return f.id===id})}
+
+function url(u){u=(u||'').trim();if(!u)return '';return /^https?:\/\//i.test(u)?u:'https://'+u}
+function igUrl(u){u=(u||'').trim();if(!u)return '';if(/instagram\.com/i.test(u))return url(u);return 'https://instagram.com/'+u.replace(/^@/,'')}
+function waUrl(t){var d=(t||'').replace(/\D/g,'');if(d.length===9)d='34'+d;return d?'https://wa.me/'+d:''}
+
+function counts(){
+  var c={activos:0,revisar:0,curso:0,nuevos:0,aceptados:0,descartados:0};
+  S.fichas.forEach(function(f){
+    if(tipoF!=='todos'&&f.tipo!==tipoF)return;
+    if(!active(f)){c.descartados++;return}
+    c.activos++;if(due(f))c.revisar++;
+    if(started(f)&&f.decision!=='si')c.curso++;
+    if(!started(f))c.nuevos++;
+    if(f.decision==='si')c.aceptados++;
+  });
+  return c;
+}
+function pass(f){
+  if(tipoF!=='todos'&&f.tipo!==tipoF)return false;
+  if(qtxt){var h=(title(f)+' '+f.nombre+' '+f.apellido+' '+f.lugar+' '+f.extra).toLowerCase();if(h.indexOf(qtxt)<0)return false}
+  switch(filtro){
+    case 'activos':return active(f);
+    case 'revisar':return due(f);
+    case 'curso':return active(f)&&started(f)&&f.decision!=='si';
+    case 'nuevos':return active(f)&&!started(f);
+    case 'aceptados':return active(f)&&f.decision==='si';
+    case 'descartados':return !active(f);
+  }
+  return true;
+}
+function grp(f){return !active(f)?4:due(f)?0:(started(f)?1:2)}
+
+function renderList(){
+  var c=counts();
+  var tp=[['todos','Todos'],['restaurante','Restaurantes'],['alojamiento','Alojamientos'],['otro','Otros']];
+  document.getElementById('tipos').innerHTML=tp.map(function(t){return '<button class="chip" data-act="tipo" data-v="'+t[0]+'" aria-pressed="'+(tipoF===t[0])+'">'+t[1]+'</button>'}).join('');
+  var fl=[['activos','Activos'],['revisar','Por revisar'],['curso','En curso'],['nuevos','Sin empezar'],['aceptados','Aceptaron'],['descartados','Descartados']];
+  document.getElementById('filtros').innerHTML=fl.map(function(t){return '<button class="chip" data-act="filtro" data-v="'+t[0]+'" aria-pressed="'+(filtro===t[0])+'">'+t[1]+' <b>'+c[t[0]]+'</b></button>'}).join('');
+  document.getElementById('banner').innerHTML=c.revisar&&filtro!=='revisar'?'<div class="alert"><span>⏰ '+c.revisar+(c.revisar===1?' ficha lleva':' fichas llevan')+' más de 24 h sin revisar</span><button class="btn sm" data-act="filtro" data-v="revisar">Revisar ahora</button></div>':'';
+  var items=S.fichas.filter(pass).sort(function(a,b){return grp(a)-grp(b)||a.orden-b.orden});
+  var el=document.getElementById('list');
+  if(!items.length){el.innerHTML='<div class="empty">No hay fichas aquí.'+(filtro==='revisar'?' Todo al día.':'')+'</div>';return}
+  el.innerHTML=items.map(function(f){
+    var st=status(f), n=nSteps(f), d=due(f);
+    return '<article class="card" data-id="'+f.id+'">'
+     +'<div class="row"><div style="min-width:0"><h3>'+esc(title(f))+'</h3><p>'+esc([[f.nombre,f.apellido].filter(Boolean).join(' '),f.lugar].filter(Boolean).join(' · '))+'</p>'+(f.extra?'<p>'+esc(f.extra)+'</p>':'')+'</div><span class="st '+st[1]+'">'+st[0]+'</span></div>'
+     +'<div class="bar" aria-hidden="true"><i style="width:'+Math.round(n/STEPS.length*100)+'%"></i></div>'
+     +'<div class="meta"><span>'+n+' de '+STEPS.length+' pasos</span><span>'+(started(f)?'Revisado '+hace(f.revisado):'')+'</span></div>'
+     +(d?dueBox(f):'')+'</article>';
+  }).join('');
+}
+function dueBox(f){
+  return '<div class="due"><strong>⏰ Pasaron 24 h. ¿Sigue en pie con '+esc(title(f))+'?</strong><div class="acts">'
+   +'<button class="btn sm" data-act="keep" data-id="'+f.id+'">Sigue, sin novedades</button>'
+   +(f.escribio!=='si'?'<button class="btn sm" data-act="wrote" data-id="'+f.id+'">Ya me escribió</button>':'')
+   +(f.decision!=='si'?'<button class="btn sm" data-act="accept" data-id="'+f.id+'">Aceptó</button>':'')
+   +'<button class="btn sm" data-act="drop" data-id="'+f.id+'">Lo dejo</button></div></div>';
+}
+
+function fld(f,label,k,type,opts){
+  opts=opts||{};
+  var cp=opts.copy&&f[k]?'<button type="button" class="cp" data-act="copy" data-text="'+esc(f[k])+'">Copiar</button>':'';
+  var inner=k==='notas'?'<textarea id="f_'+k+'" data-k="'+k+'">'+esc(f[k])+'</textarea>':'<input id="f_'+k+'" data-k="'+k+'" type="'+type+'" '+(opts.im?'inputmode="'+opts.im+'" ':'')+'autocomplete="off" placeholder="'+esc(opts.ph||'')+'" value="'+esc(f[k])+'">';
+  return '<label class="f"><span class="lr"><span>'+label+'</span>'+cp+'</span>'+inner+'</label>';
+}
+function seg(k,opts,cur,cls){
+  return '<div class="seg">'+opts.map(function(o){return '<button class="'+(o[2]||'')+'" data-act="set" data-k="'+k+'" data-v="'+o[0]+'" aria-pressed="'+(cur===o[0])+'">'+o[1]+'</button>'}).join('')+'</div>';
+}
+function lnk(href,label){return href?'<a class="btn sm" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">'+label+'</a>':''}
+
+function renderSheet(){
+  var f=byId(openId);if(!f)return;
+  var sb=document.getElementById('sheet'), top=sb.scrollTop;
+  document.getElementById('shTitle').textContent=title(f);
+  var st=status(f), unlocked=f.escribio==='si';
+  var h='';
+  h+='<div class="sec"><div class="top" style="align-items:center"><span class="st '+st[1]+'">'+st[0]+'</span><span class="hint">Revisado '+hace(f.revisado)+'</span></div>'
+   +(due(f)?dueBox(f):'')
+   +(started(f)&&active(f)&&!due(f)?'<div class="links"><button class="btn sm" data-act="keep" data-id="'+f.id+'">Marcar como revisado hoy</button></div>':'')+'</div>';
+
+  h+='<div class="sec"><h3>Paso a paso</h3><div class="bar"><i style="width:'+Math.round(nSteps(f)/STEPS.length*100)+'%"></i></div><p class="hint">'+nSteps(f)+' de '+STEPS.length+' completados</p><ul class="steps">'
+   +STEPS.map(function(s){var on=!!f.pasos[s.id];return '<li><button class="step" role="checkbox" aria-checked="'+on+'" data-act="step" data-s="'+s.id+'"><span class="bx">'+(on?'✓':'')+'</span><span><span>'+s.t+'</span><small>'+(on?'Hecho el '+fdate(f.pasos[s.id]):(s.h||''))+'</small></span></button></li>'}).join('')+'</ul></div>';
+
+  h+='<div class="sec"><h3>¿Cómo va el trato?</h3>'
+   +'<div><p class="q">¿El cliente me ha escrito?</p>'+seg('escribio',[['aun','Aún no'],['si','Sí, me escribió']],f.escribio)+'</div>'
+   +'<div><p class="q">¿El cliente aceptó?</p>'+seg('decision',[['pend','Pendiente'],['si','Sí, aceptó'],['no','No aceptó','no']],f.decision)+'</div>'
+   +'<div><p class="q">¿La propuesta sigue en pie?</p>'+(active(f)?'<p class="hint" style="margin-bottom:8px">Sí, sigue en pie.</p><button class="btn sm bad" data-act="drop" data-id="'+f.id+'">Dejarla (descartar)</button>':'<p class="hint" style="margin-bottom:8px">No, está descartada.</p><button class="btn sm" data-act="react" data-id="'+f.id+'">Reactivar</button>')+'</div></div>';
+
+  h+='<div class="sec"><h3>Abrir</h3><div class="links">'+lnk(igUrl(f.ig),'Instagram')+lnk(url(f.web),'Su web')+lnk(url(f.boceto),'Mi boceto')+lnk(f.maps,'Google Maps')+'</div>'
+   +'<p class="q" style="margin:4px 0 0">Contacto directo</p>';
+  if(unlocked){
+    h+='<div class="links">'+lnk(waUrl(f.tel||f.tel2),'WhatsApp')+(f.tel?lnk('tel:'+f.tel.replace(/[^\d+]/g,''),'Llamar'):'')+(f.mail?lnk('mailto:'+f.mail,'Correo'):'')+'</div><p class="hint">Desbloqueado porque ya te escribió. Si el botón de llamar no funciona, copia el número de abajo.</p>';
+  }else{
+    h+='<div class="links"><button class="btn sm locked" disabled>WhatsApp</button><button class="btn sm locked" disabled>Llamar</button><button class="btn sm locked" disabled>Correo</button></div><p class="hint">Bloqueado hasta que el cliente te escriba: el primer contacto va por Instagram, nunca en frío por WhatsApp, llamada o correo.</p>';
+  }
+  h+='</div>';
+
+  h+='<div class="sec"><h3>Datos</h3>'
+   +'<div class="grid2">'+fld(f,'Nombre','nombre','text')+fld(f,'Apellido','apellido','text')+'</div>'
+   +fld(f,'Nombre del negocio / sitio web','negocio','text')
+   +'<label class="f"><span class="lr"><span>Tipo</span></span><select id="f_tipo" data-k="tipo"><option value="restaurante"'+(f.tipo==='restaurante'?' selected':'')+'>Restaurante</option><option value="alojamiento"'+(f.tipo==='alojamiento'?' selected':'')+'>Alojamiento</option><option value="otro"'+(f.tipo==='otro'?' selected':'')+'>Otro</option></select></label>'
+   +fld(f,'Lugar','lugar','text')
+   +fld(f,'Web del negocio (vacío si no tiene)','web','url',{ph:'https://…'})
+   +fld(f,'URL de mi boceto','boceto','url',{ph:'https://…'})
+   +fld(f,'Instagram','ig','text',{ph:'@usuario o enlace'})
+   +fld(f,'Teléfono','tel','tel',{im:'tel',copy:1})
+   +fld(f,'Otro número / WhatsApp','tel2','tel',{im:'tel',copy:1})
+   +fld(f,'Correo','mail','email',{im:'email',copy:1})
+   +fld(f,'Enlace de Google Maps','maps','url')
+   +fld(f,'Notas','notas','text')
+   +'</div>';
+
+  h+='<div class="sec"><h3>Historial</h3>'+(f.historial.length?'<ul class="log">'+f.historial.slice(0,8).map(function(x){return '<li>'+fdate(x.t)+' · '+esc(x.x)+'</li>'}).join('')+'</ul>':'<p class="hint">Aún no hay movimientos.</p>')+'</div>';
+  h+='<div class="links"><button class="btn bad" data-act="del" id="btnDel">Borrar esta ficha</button></div>';
+  document.getElementById('shBody').innerHTML=h;
+  sb.scrollTop=top;
+}
+
+function openSheet(id){openId=id;document.getElementById('sheet').hidden=false;document.getElementById('sheet').scrollTop=0;renderSheet();document.getElementById('main').style.visibility='hidden'}
+function closeSheet(){save();openId=null;document.getElementById('sheet').hidden=true;document.getElementById('main').style.visibility='';renderList()}
+function toast(t){var e=document.getElementById('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){e.hidden=true},2200)}
+function copy(text,msg){
+  function fb(){var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast(msg||'Copiado')}catch(e){toast('No se pudo copiar')}ta.remove()}
+  try{navigator.clipboard.writeText(text).then(function(){toast(msg||'Copiado')},fb)}catch(e){fb()}
+}
+function refresh(){renderList();if(openId)renderSheet()}
+
+var delArmed=false, restoreArmed=false;
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-act]');
+  if(!t){var c=e.target.closest('.card');if(c)openSheet(c.dataset.id);return}
+  var a=t.dataset.act, f=byId(t.dataset.id||openId), now=Date.now();
+  switch(a){
+    case 'new':var nf=blank({orden:0});S.fichas.unshift(nf);log(nf,'Ficha creada');save();openSheet(nf.id);break;
+    case 'close':closeSheet();break;
+    case 'tipo':tipoF=t.dataset.v;renderList();break;
+    case 'filtro':filtro=t.dataset.v;renderList();window.scrollTo(0,0);break;
+    case 'step':var s=STEPS.find(function(x){return x.id===t.dataset.s});if(f.pasos[s.id]){delete f.pasos[s.id];log(f,'Desmarqué: '+s.t)}else{f.pasos[s.id]=now;log(f,'Hecho: '+s.t)}f.revisado=now;save();renderSheet();break;
+    case 'set':var k=t.dataset.k,v=t.dataset.v;f[k]=v;if(k==='decision'&&v==='no'){f.descartado=true}log(f,k==='escribio'?(v==='si'?'Me escribió':'Aún no ha escrito'):(v==='si'?'Aceptó':v==='no'?'No aceptó':'Decisión pendiente'));f.revisado=now;save();refresh();break;
+    case 'keep':f.revisado=now;log(f,'Revisado: sigue en pie');save();refresh();toast('Anotado');break;
+    case 'wrote':f.escribio='si';f.revisado=now;log(f,'Me escribió');save();refresh();break;
+    case 'accept':f.decision='si';f.revisado=now;log(f,'Aceptó');save();refresh();break;
+    case 'drop':f.descartado=true;f.revisado=now;log(f,'Descartada');save();refresh();break;
+    case 'react':f.descartado=false;if(f.decision==='no')f.decision='pend';f.revisado=now;log(f,'Reactivada');save();refresh();break;
+    case 'copy':copy(t.dataset.text);break;
+    case 'del':if(!delArmed){delArmed=true;t.textContent='Toca otra vez para borrar';setTimeout(function(){delArmed=false;if(t.isConnected)t.textContent='Borrar esta ficha'},3500)}else{delArmed=false;S.fichas=S.fichas.filter(function(x){return x.id!==openId});save();closeSheet()}break;
+    case 'backup':copy(JSON.stringify(S),'Respaldo copiado');break;
+    case 'restore':
+      if(!restoreArmed){restoreArmed=true;t.textContent='Toca otra vez para reemplazar todo';setTimeout(function(){restoreArmed=false;t.textContent='Restaurar (reemplaza todo)'},3500);break}
+      restoreArmed=false;t.textContent='Restaurar (reemplaza todo)';
+      try{var d=JSON.parse(document.getElementById('restoreTxt').value);if(!d||!Array.isArray(d.fichas))throw 0;S=d;save();renderList();toast('Respaldo restaurado')}catch(err){toast('El texto no es un respaldo válido')}
+      break;
+  }
+});
+document.addEventListener('input',function(e){
+  var t=e.target;
+  if(t.id==='q'){qtxt=t.value.trim().toLowerCase();renderList();return}
+  if(!t.dataset||!t.dataset.k||!openId)return;
+  var f=byId(openId);f[t.dataset.k]=t.value;
+  if(t.dataset.k==='negocio'||t.dataset.k==='nombre'||t.dataset.k==='apellido')document.getElementById('shTitle').textContent=title(f);
+  saveSoon();
+});
+document.addEventListener('change',function(e){if(e.target.id==='f_tipo'&&openId){save();renderSheet()}});
+setInterval(function(){if(!openId&&!(document.activeElement&&document.activeElement.id==='q'))renderList()},60000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&!openId)renderList()});
+
+load();showWarn();renderList();
+})();
+</script>
