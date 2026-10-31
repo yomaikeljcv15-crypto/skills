@@ -1,0 +1,13 @@
+FICHAS DE CLIENTES - pasos para Cloudflare Pages (desde el móvil)
+
+1. Entra en dash.cloudflare.com > Workers y Pages > Crear > Pages > "Cargar activos" (Direct Upload).
+2. Ponle un nombre al proyecto (por ejemplo: mis-fichas) y sube este .zip.
+3. Pulsa Implementar. Te dará un enlace tipo mis-fichas.pages.dev.
+4. Abre el enlace en Chrome del móvil > menú (tres puntos) > "Instalar app" o "Añadir a pantalla de inicio".
+
+IMPORTANTE
+- Tus fichas se guardan en el navegador de ese enlace. Si lo abres desde otra dirección (por ejemplo la versión de Claude), verás las fichas vacías: no se comparten.
+- Para pasar datos: en la versión antigua, Copia de seguridad > Copiar respaldo; en la nueva, pegar y Restaurar.
+- Haz copias de seguridad de vez en cuando. Si borras los datos del navegador, se pierden.
+- Para actualizar la app más adelante, sube un zip nuevo al mismo proyecto.
+- Esta app es solo tuya. No publiques datos de clientes ni la compartas.
